@@ -1,0 +1,3 @@
+Python 3.10.0
+aiogram==2.18
+aiogram-dialog==1.2.1
