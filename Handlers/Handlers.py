@@ -22,7 +22,7 @@ def getproc():
         return proccessor
     else:
         global proccessor
-        proccessor = 'Другой комп'
+        proccessor = f'Другой комп {platform.processor()}'
         return proccessor
 
 
