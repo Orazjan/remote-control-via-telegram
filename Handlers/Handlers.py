@@ -20,6 +20,10 @@ def getproc():
         global proccessor
         proccessor = "Первый компьютер"
         return proccessor
+    else:
+        global proccessor
+        proccessor = 'Другой комп'
+        return proccessor
 
 
 async def on_startup():
