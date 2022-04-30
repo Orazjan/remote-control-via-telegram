@@ -1,6 +1,6 @@
 import psutil
+from Handlers import Funcs
 import Handlers.Opens as op
-from Handlers.Funcs import * 
 from datetime import datetime
 from Keyboardz.KeyboardFun import *
 from Handlers.TaskProc import get_processes_running, listToString
@@ -18,17 +18,17 @@ def ReturnMessage(text):
 def Workkomp(func):
     if (func == "Покинуть систему"):
         func = "Вы покинете систему через несколько секунд "
-        LeaveSession()
+        Funcs.LeaveSession()
         return ReturnMessage(func)
 
     elif (func == "Перезагрузка"):
         func = "Компьютер перезагрузится через 20 секунд "
-        Reboot()
+        Funcs.Reboot()
         return ReturnMessage(func)
 
     elif (func == "Завершение работы"):
         func = "Компьютер выключится через 20 секунд "
-        Shutdown()
+        Funcs.Shutdown()
         return ReturnMessage(func)
         
     else:
@@ -67,8 +67,13 @@ def StatusKomp(func):
             array.append(p+"\n")
         func = f"Открытые программы\n\n{listToString(array)}\n\n"
         return ReturnMessage(func)
-    # else:
-    #     return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
+    
+    elif (func == "Закрыть окно"):
+        Funcs.KillWind()
+        return ReturnMessage("Окно закрыто ")
+
+    else:
+        return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
 
 
 def OpenWeb(func):

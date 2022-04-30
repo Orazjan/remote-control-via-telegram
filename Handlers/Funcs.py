@@ -32,7 +32,7 @@ def LeaveSession():
     os.system("shutdown -l")
 
 
-def CloseWind():
+def KillWind():
     pag.hotkey('ctrl', 'w' )
 
 
