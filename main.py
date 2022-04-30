@@ -5,11 +5,11 @@ from Handlers import StateWork as SG, StateCommand as SC, StateOpen as SO, State
 
 Logging()
 
+HD.register_Handler_Client(HD.dp)
 SG.register_Handler_StateWork(HD.dp)
 SC.register_Handler_Statecommand(HD.dp)
 SO.register_Handler_StateOpen(HD.dp)
 SF.register_Handler_FunCommand(HD.dp)
-HD.register_Handler_Client(HD.dp)
 
 executor.start(HD.dp, HD.on_startup())
 executor.start_polling(HD.dp, skip_updates=True)

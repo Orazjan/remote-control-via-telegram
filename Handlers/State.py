@@ -63,6 +63,10 @@ def StatusKomp(func):
             text = "Заряд батареи: " + str(percent) + "\nНе заряжается "
             return ReturnMessage(text)
             
+    elif (func == "Закрыть окно"):
+        Funcs.KillWind()
+        return ReturnMessage("Окно закрыто ")
+
     elif (func == 'Открытые программы'):
         lstp = get_processes_running()
         array =[]
@@ -71,9 +75,7 @@ def StatusKomp(func):
         func = f"Открытые программы\n\n{listToString(array)}\n\n"
         return ReturnMessage(func)
     
-    elif (func == "Закрыть окно"):
-        Funcs.KillWind()
-        return ReturnMessage("Окно закрыто ")
+    
 
     else:
         return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')

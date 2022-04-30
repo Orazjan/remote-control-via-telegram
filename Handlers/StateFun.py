@@ -61,9 +61,9 @@ async def second(message: types.Message, state: FSMContext):
         Funcs.WindowWarning(hren)
         await bot.send_message(id, ReturnMessage(f"Процесс готово.\n"))
     
-    else:
-        pass
-        
+    elif (data['choosen'] == "Скриншот экрана"): 
+        await bot.send_message(id, ReturnMessage(f"Выбирайте действие.\n"))
+
     await state.finish()
 
     if (ReplyKeyboardMarkup == True):

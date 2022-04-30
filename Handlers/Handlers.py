@@ -1,6 +1,7 @@
 import platform
 from environs import Env
-import Handlers.State as fun
+import Handlers.State as st
+import Handlers.Funcs as fun
 from aiogram import types, Dispatcher, Bot
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -26,20 +27,20 @@ def getproc():
 
 
 async def on_startup():
-    await bot.send_message(id, fun.ReturnMessage(f"Компьютер \n{getproc()} \nвключён в "),reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(id, st.ReturnMessage(f"Компьютер \n{getproc()} \nвключён в "),reply_markup=ReplyKeyboardRemove())
 
 
 async def working(message: types.message):
-    await bot.send_message(id, fun.ReturnMessage(f"Работает: {proccessor}\n"),reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(id, st.ReturnMessage(f"Работает: {proccessor}\n"),reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):
-    await bot.send_message(id, fun.ReturnMessage("Отмена действия "))
+    await bot.send_message(id, st.ReturnMessage("Отмена действия "))
     fun.Cancel()
 
 
 async def kill(message: types.Message):
-    await bot.send_message(id, fun.ReturnMessage("Программа отключается "))
+    await bot.send_message(id, st.ReturnMessage("Программа отключается "))
     fun.KillFunc()
 
 def register_Handler_Client(dp: Dispatcher):

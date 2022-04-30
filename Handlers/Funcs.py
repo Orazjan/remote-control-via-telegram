@@ -12,7 +12,7 @@ def Logging():
                     level = logging.ERROR)
 
     logger = logging.getLogger()
-    logger.error(State.ReturnMessage("This is log file "))
+    logger.info(State.ReturnMessage("This is log file "))
 
 def Cancel():
     os.system("shutdown -a")
