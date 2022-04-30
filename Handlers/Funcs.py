@@ -1,20 +1,33 @@
 import logging 
 import os, random as rd
 import pyautogui as pag
-from Handlers import State
+from Handlers import State, TaskProc, Handlers
 
-path = ''
+path = "D://Projects/PY/ForBot/notification/screens/"
 
 def Logging():
     Log_Format = "%(levelname)s %(asctime)s - %(message)s"
 
-    logging.basicConfig(filename = "D://Projects/PY/ForBot/logfile.log",
+    logging.basicConfig(filename = f"{path}/logfile.log",
                     filemode = "w",
                     format = Log_Format, 
                     level = logging.ERROR)
 
     logger = logging.getLogger()
-    logger.info(State.ReturnMessage("This is log file "))
+    logger.error(State.ReturnMessage(f"For check \n{Handlers.getproc()}"))
+    logger.info(State.ReturnMessage(f"This is log file {Handlers.getproc()}"))
+
+def ReadAndSendLogs():
+    try:
+        logfile = open(f'{path}/logfile.log')
+    except :
+        return "Ошибка нет файла"
+        
+    array =[]
+    for p in logfile:
+        array.append(p+"\n")
+
+    return TaskProc.listToString(array)
 
 def Cancel():
     os.system("shutdown -a")
@@ -61,7 +74,5 @@ def WindowWarning(func):
 
 
 def Screenshot():
-    global path
-    path = "D://Projects/PY/ForBot/notification/screens/"
     pag.screenshot(f'{path}/ss.png')
     

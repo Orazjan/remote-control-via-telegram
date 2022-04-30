@@ -75,6 +75,9 @@ def StatusKomp(func):
         func = f"Открытые программы\n\n{listToString(array)}\n\n"
         return ReturnMessage(func)
     
+    elif (func == "Логи"):
+        return ReturnMessage(Funcs.ReadAndSendLogs())
+        
     
 
     else:

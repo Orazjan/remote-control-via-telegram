@@ -19,10 +19,10 @@ proccessor = ''
 def getproc():
     if (platform.processor()==env.str("kompfirst")):
         global proccessor
-        proccessor = "Первый компьютер"
+        proccessor = "Первый компьютер\n"
         return proccessor
     else:
-        proccessor = f'Другой комп {platform.processor()}'
+        proccessor = f'Другой комп {platform.processor()}\n'
         return proccessor
 
 
