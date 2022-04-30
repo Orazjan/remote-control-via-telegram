@@ -26,7 +26,7 @@ async def fun_command(message: types.Message, state: FSMContext):
 
     if data['choosen']=="Скриншот экрана":
         Funcs.Screenshot()
-        photo = open('D://Projects/PY/ForBot/screens/ss.png', 'rb')
+        photo = open(f'{Funcs.path}/ss.png', 'rb')
         await bot.send_photo(id, photo) 
 
     if (data['choosen'].startswith("Вывод")):
@@ -63,7 +63,8 @@ async def second(message: types.Message, state: FSMContext):
     
     elif (data['choosen'] == "Скриншот экрана"): 
         await bot.send_message(id, ReturnMessage(f"Выбирайте действие.\n"))
-
+        await state.finish()
+        
     await state.finish()
 
     if (ReplyKeyboardMarkup == True):

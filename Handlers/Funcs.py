@@ -3,6 +3,8 @@ import os, random as rd
 import pyautogui as pag
 from Handlers import State
 
+path = ''
+
 def Logging():
     Log_Format = "%(levelname)s %(asctime)s - %(message)s"
 
@@ -59,5 +61,7 @@ def WindowWarning(func):
 
 
 def Screenshot():
-    pag.screenshot('D://Projects/PY/ForBot/screens/ss.png')
+    global path
+    path = "D://Projects/PY/ForBot/notification/screens/"
+    pag.screenshot(f'{path}/ss.png')
     
