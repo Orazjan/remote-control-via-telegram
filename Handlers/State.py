@@ -51,7 +51,6 @@ def FunSegment(func):
 
 def StatusKomp(func):
     if (func == "Батарея"):
-        print("work 5")
         battery = psutil.sensors_battery()
         percent = int(battery.percent)
         if (battery.power_plugged == True):
