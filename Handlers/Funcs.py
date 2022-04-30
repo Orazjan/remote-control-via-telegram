@@ -1,6 +1,18 @@
+import logging 
 import os, random as rd
 import pyautogui as pag
+from Handlers import State
 
+def Logging():
+    Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+    logging.basicConfig(filename = "D://Projects/PY/ForBot/logfile.log",
+                    filemode = "w",
+                    format = Log_Format, 
+                    level = logging.ERROR)
+
+    logger = logging.getLogger()
+    logger.error(State.ReturnMessage("This is log file "))
 
 def Cancel():
     os.system("shutdown -a")
