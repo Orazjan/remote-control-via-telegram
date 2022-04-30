@@ -46,11 +46,18 @@ def KillFunc():
 def WriteText(text):
     pag.typewrite(f"{text}", interval=0.25)
 
+
 def MouseRand(func):
     pag.FAILSAFE = False
     a = rd.randint(200, 1080)   # x
     b = rd.randint(300, 1080)   # y
     pag.moveTo(a, b, int(func))
 
+
 def WindowWarning(func):
     pag.alert(func)
+
+
+def Screenshot():
+    pag.screenshot('D://Projects/PY/ForBot/screens/ss.png')
+    

@@ -1,4 +1,4 @@
-from Handlers.Funcs import *
+from Handlers import Funcs
 from Keyboardz.KeyboardFun import *
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
@@ -23,6 +23,12 @@ async def fun_command(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['choosen'] = message.text
+
+    if data['choosen']=="Скриншот экрана":
+        Funcs.Screenshot()
+        photo = open('D://Projects/PY/ForBot/screens/ss.png', 'rb')
+        await bot.send_photo(id, photo) 
+
     if (data['choosen'].startswith("Вывод")):
         await bot.send_message(id, fs(message.text), reply_markup=keyboardwybor)
     else:
@@ -42,19 +48,22 @@ async def second(message: types.Message, state: FSMContext):
 
     if(data['choosen'] == "Рандом с мышкой"):
         hren = data['values']
-        MouseRand(hren)
+        Funcs.MouseRand(hren)
         await bot.send_message(id, ReturnMessage(f"Процесс готово.\n"))
 
     elif (data['choosen'] == "Напечатать"):
         hren = data['values']
-        WriteText(hren)
+        Funcs.WriteText(hren)
         await bot.send_message(id, ReturnMessage(f"Процесс {data['values']} готово.\n"))
     
     elif (data['choosen'] == "Вывод окна"):
         hren = data['values']
-        WindowWarning(hren)
+        Funcs.WindowWarning(hren)
         await bot.send_message(id, ReturnMessage(f"Процесс готово.\n"))
-
+    
+    else:
+        pass
+        
     await state.finish()
 
     if (ReplyKeyboardMarkup == True):

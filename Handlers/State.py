@@ -46,6 +46,9 @@ def FunSegment(func):
     elif (func == "Вывод окна"):
         return ReturnMessage("Введите текст или выберите из меню:\n")        
 
+    elif (func == "Скриншот экрана"):
+        return ReturnMessage("Скриншот готов ")
+
     else:
         return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
 
