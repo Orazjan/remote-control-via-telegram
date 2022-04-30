@@ -21,7 +21,6 @@ def getproc():
         proccessor = "Первый компьютер"
         return proccessor
     else:
-        global proccessor
         proccessor = f'Другой комп {platform.processor()}'
         return proccessor
 
