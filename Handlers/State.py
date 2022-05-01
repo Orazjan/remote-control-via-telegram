@@ -1,100 +1,98 @@
 import psutil
-from Handlers import Funcs
-import Handlers.Opens as op
+from Handlers import funcs
+import Handlers.opens as op
 from datetime import datetime
-from Keyboardz.KeyboardFun import *
-from Handlers.TaskProc import get_processes_running, listToString
+from Keyboardz.keyboard_fun import *
+from Handlers.task_proc import get_processes_running, list_to_string
 
 
-def ReturnTime():
+def return_time():
     dt = datetime.now()
     bt = dt.strftime("%H:%M:%S - %d.%m")
     return bt
 
 
-def ReturnMessage(text):
-    return text + ReturnTime()
+def return_message(text):
+    return text + return_time()
 
-def Workkomp(func):
+def work_komp(func):
     if (func == "Покинуть систему"):
         func = "Вы покинете систему через несколько секунд "
-        Funcs.LeaveSession()
-        return ReturnMessage(func)
+        funcs.leave_session()
+        return return_message(func)
 
     elif (func == "Перезагрузка"):
         func = "Компьютер перезагрузится через 20 секунд "
-        Funcs.Reboot()
-        return ReturnMessage(func)
+        funcs.reboot()
+        return return_message(func)
 
     elif (func == "Завершение работы"):
         func = "Компьютер выключится через 20 секунд "
-        Funcs.Shutdown()
-        return ReturnMessage(func)
+        funcs.shutdown()
+        return return_message(func)
         
     else:
-        return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
+        return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 
-def FunSegment(func):
+def fun_segment(func):
     if (func == "Напечатать"):
         func ='Введите текст на англ\n'
-        return ReturnMessage(func)
+        return return_message(func)
     
     elif (func=="Рандом с мышкой"):
         func ='Введите количество секунд:\n'
-        return ReturnMessage(f"{func}")
+        return return_message(f"{func}")
 
     elif (func == "Вывод окна"):
-        return ReturnMessage("Введите текст или выберите из меню:\n")        
+        return return_message("Введите текст или выберите из меню:\n")        
 
     elif (func == "Скриншот экрана"):
-        return ReturnMessage("Скриншот готов ")
+        return return_message("Скриншот готов ")
 
     else:
-        return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
+        return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 
-def StatusKomp(func):
+def status_komp(func):
     if (func == "Батарея"):
         battery = psutil.sensors_battery()
         percent = int(battery.percent)
         if (battery.power_plugged == True):
             text = "Заряд батареи: " + str(percent) + "\nЗаряжается "
-            return ReturnMessage(text)
+            return return_message(text)
         else:
             text = "Заряд батареи: " + str(percent) + "\nНе заряжается "
-            return ReturnMessage(text)
+            return return_message(text)
             
     elif (func == "Закрыть окно"):
-        Funcs.KillWind()
-        return ReturnMessage("Окно закрыто ")
+        funcs.kill_wind()
+        return return_message("Окно закрыто ")
 
     elif (func == 'Открытые программы'):
         lstp = get_processes_running()
         array =[]
         for p in lstp:
             array.append(p+"\n")
-        func = f"Открытые программы\n\n{listToString(array)}\n\n"
-        return ReturnMessage(func)
+        func = f"Открытые программы\n\n{list_to_string(array)}\n\n"
+        return return_message(func)
     
     elif (func == "Логи"):
-        return ReturnMessage(Funcs.ReadAndSendLogs())
-        
-    
-
+        return return_message(funcs.read_and_send_logs())
+  
     else:
-        return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
+        return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 
 
-def OpenWeb(func):
+def open_web(func):
     if (func == "Vk"):
         func = "Открывается ВК "
-        op.openVK()
+        op.open_vk()
 
     elif (func == "YouTube"):
         func = "Открывается YouTube "
-        op.openYoutube()
+        op.open_youtube()
 
     elif (func == "Другой сайт"):
         func = "Введите ссылку на сайт: "
     
     else:
-        return ReturnMessage('Неправильная команда. Попробуйте выбрать другую\n')
+        return return_message('Неправильная команда. Попробуйте выбрать другую\n')

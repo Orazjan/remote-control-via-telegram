@@ -1,13 +1,13 @@
 import webbrowser
 
 
-def openVK():
+def open_vk():
     webbrowser.open_new('https://vk.com')
 
 
-def openYoutube():
+def open_youtube():
     webbrowser.open_new('https://youtube.com')
 
 
-def openweb(text):
+def open_web(text):
     webbrowser.open_new(f'{text}')

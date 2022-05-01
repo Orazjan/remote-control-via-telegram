@@ -6,6 +6,6 @@ kb2 = KeyboardButton("Открытые программы")
 kb3 = KeyboardButton("Закрыть программу")
 kb5 = KeyboardButton("Логи")
 
-KeybordStatus = ReplyKeyboardMarkup(
+keybord_status = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=True)
-KeybordStatus.add(kb1, kb4).add(kb2, kb3, kb5)
+keybord_status.add(kb1, kb4).add(kb2, kb3, kb5)

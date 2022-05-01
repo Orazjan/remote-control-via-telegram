@@ -1,25 +1,26 @@
 import logging 
-import os, random as rd
+import os
+import random as rd
 import pyautogui as pag
-from Handlers import State, TaskProc, Handlers
+from Handlers import state, task_proc, handlers
 
-path = "D://Projects/PY/ForBot/notification/screens/"
+PATH = "D://Projects/PY/ForBot/notification/screens/"
 
-def Logging():
+def loggings():
+    
     Log_Format = "%(levelname)s %(asctime)s - %(message)s"
-
-    logging.basicConfig(filename = f"{path}/logfile.log",
+    logging.basicConfig(filename = f"{PATH}/logfile.log",
                     filemode = "w",
                     format = Log_Format, 
                     level = logging.ERROR)
 
     logger = logging.getLogger()
-    logger.error(State.ReturnMessage(f"For check \n{Handlers.getproc()}"))
-    logger.info(State.ReturnMessage(f"This is log file {Handlers.getproc()}"))
+    logger.error(state.return_message(f"For check \n{handlers.get_proc()}"))
+    logger.info(state.return_message(f"This is log file {handlers.get_proc()}"))
 
-def ReadAndSendLogs():
+def read_and_send_logs():
     try:
-        logfile = open(f'{path}/logfile.log')
+        logfile = open(f'{PATH}/logfile.log')
     except :
         return "Ошибка нет файла"
         
@@ -27,52 +28,52 @@ def ReadAndSendLogs():
     for p in logfile:
         array.append(p+"\n")
 
-    return TaskProc.listToString(array)
+    return task_proc.list_to_string(array)
 
-def Cancel():
+def cancel():
     os.system("shutdown -a")
 
 
-def Shutdown():
+def shutdown():
     os.system(
         "shutdown -s -t 20 -c \"Сервер будет выключен через 20 секунд. Сохраните свои документы!\"")
 
 
-def Reboot():
+def reboot():
     os.system(
         "shutdown -r -t 20 -c \"Этот компьютер будет перезагружен через 20 секунд.\"")
 
 
-def LeaveSession():
+def leave_session():
     os.system("shutdown -l")
 
 
-def KillWind():
+def kill_wind():
     pag.hotkey('ctrl', 'w' )
 
 
-def KillProcess(text):
+def kill_process(text):
     os.system(f"taskkill /f /im {text}")
 
 
-def KillFunc():
+def kill_func():
     os.system("taskkill /f /im python.exe")
 
-def WriteText(text):
+def write_text(text):
     pag.typewrite(f"{text}", interval=0.25)
 
 
-def MouseRand(func):
+def mouse_rand(func):
     pag.FAILSAFE = False
     a = rd.randint(200, 1080)   # x
     b = rd.randint(300, 1080)   # y
     pag.moveTo(a, b, int(func))
 
 
-def WindowWarning(func):
+def window_warning(func):
     pag.alert(func)
 
 
-def Screenshot():
-    pag.screenshot(f'{path}/ss.png')
+def screenshot():
+    pag.screenshot(f'{PATH}/ss.png')
     

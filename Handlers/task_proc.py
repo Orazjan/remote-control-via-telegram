@@ -14,7 +14,7 @@ def get_processes_running():
             p.append(m.group(1).decode())
     return(p)
 
-def listToString(s):
+def list_to_string(s):
     str1 = "" 
     
     for ele in s: 

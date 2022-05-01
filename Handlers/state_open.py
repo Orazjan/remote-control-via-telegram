@@ -1,9 +1,9 @@
-from Handlers import Opens
+from Handlers import opens
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
-from Handlers.Handlers import bot, dp, id
-from Keyboardz.KeyboardOpenWeb import KeyboardOpen
-from Handlers.State import OpenWeb as ow, ReturnMessage
+from Handlers.handlers import bot, dp, id
+from Keyboardz.keyboard_open_web import keyboard_open
+from Handlers.state import open_web as ow, return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
@@ -15,9 +15,9 @@ class opencomand(StatesGroup):
     urlname = State()
 
 
-async def menuWeb(message: types.Message):
+async def menu_web(message: types.Message):
     await opencomand.commamnd.set()
-    await bot.send_message(id, "Открытие сайта. Выбрите сайт:\n", reply_markup=KeyboardOpen)
+    await bot.send_message(id, "Открытие сайта. Выбрите сайт:\n", reply_markup=keyboard_open)
 
 
 @dp.message_handler(state=opencomand.commamnd)
@@ -48,12 +48,12 @@ async def procces_task(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['urlname'] = message.text
 
-    Opens.openweb(data['urlname'])    
-    await bot.send_message(id, ReturnMessage(f"Ссылка открыта \n"))
+    opens.open_web(data['urlname'])    
+    await bot.send_message(id, return_message(f"Ссылка открыта \n"))
     await state.finish()
     if (ReplyKeyboardMarkup == True):
         ReplyKeyboardRemove.remove_keyboard
 
-def register_Handler_StateOpen(dp: Dispatcher):
-    dp.register_message_handler(menuWeb, commands=['openweb'])
+def register_handler_state_open(dp: Dispatcher):
+    dp.register_message_handler(menu_web, commands=['openweb'])
     

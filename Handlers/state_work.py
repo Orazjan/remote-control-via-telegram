@@ -1,8 +1,8 @@
 from aiogram import types, Dispatcher
-from Handlers.State import Workkomp as ps
+from Handlers.state import work_komp as ps
 from aiogram.dispatcher import FSMContext
-from Handlers.Handlers import bot, dp, id
-from Keyboardz.KeybordsKomp import KeybordKomp
+from Handlers.handlers import bot, dp, id
+from Keyboardz.keybords_komp import keybord_komp
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
 
@@ -11,9 +11,9 @@ class workcomand(StatesGroup):
     commamnd = State()
 
 
-async def menuwork(message: types.Message):
+async def menu_work(message: types.Message):
     await workcomand.commamnd.set()
-    await bot.send_message(id, "Работа с компьютером. Выберите действие", reply_markup=KeybordKomp)
+    await bot.send_message(id, "Работа с компьютером. Выберите действие", reply_markup=keybord_komp)
 
 
 @dp.message_handler(state=workcomand.commamnd)
@@ -31,5 +31,5 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-def register_Handler_StateWork(dp: Dispatcher):
-    dp.register_message_handler(menuwork, commands=['rabota'])
+def register_handler_state_work(dp: Dispatcher):
+    dp.register_message_handler(menu_work, commands=['rabota'])

