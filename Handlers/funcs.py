@@ -2,6 +2,7 @@ import logging
 import os
 import random as rd
 import pyautogui as pag
+import screen_brightness_control as sbc
 from Handlers import state, task_proc, handlers
 
 PATH = "D://Projects/PY/ForBot/notification/screens/"
@@ -64,9 +65,9 @@ def write_text(text):
 
 def mouse_rand(func):
     pag.FAILSAFE = False
-    a = rd.randint(200, 1080)   # x
-    b = rd.randint(300, 1080)   # y
-    pag.moveTo(a, b, int(func))
+    value_for_x = rd.randint(200, 1080)   # x
+    value_for_y = rd.randint(300, 1080)   # y
+    pag.moveTo(value_for_x, value_for_y, int(func))
 
 
 def window_warning(func):
@@ -75,4 +76,12 @@ def window_warning(func):
 
 def screenshot():
     pag.screenshot(f'{PATH}/ss.png')
+
+def get_brightness():
+    for monitor in sbc.list_monitors():
+        return f"Название монитора: {monitor}, \nУровень яркости: {sbc.get_brightness(display=monitor)}%'"
+
+
+def bright_monitor(procent):
+    sbc.set_brightness(procent)
     

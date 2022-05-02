@@ -75,8 +75,14 @@ def status_komp(func):
         func = f"Открытые программы\n\n{list_to_string(array)}\n\n"
         return return_message(func)
     
+    elif func == "Закрыть программу":
+        return return_message("Закрыть программу")
+    
     elif (func == "Логи"):
         return return_message(funcs.read_and_send_logs())
+    
+    elif func == "Яркость":
+        return return_message(f"{funcs.get_brightness()}\nУкажите уровень яркости:\n")
   
     else:
         return return_message('Неправильная команда. Попробуйте выбрать другую\n')
