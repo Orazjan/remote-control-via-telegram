@@ -32,12 +32,12 @@ async def process_command(message: types.Message, state: FSMContext):
         await StateComand.next()
         await bot.send_message(id, ps(data['commandforstatus']))
         await StateComand.taskname.set()
-        
+
     elif data['commandforstatus'] == "Яркость":
         await StateComand.next()
         await bot.send_message(id, ps(data['commandforstatus']))
         await StateComand.taskname.set()
-        
+
     else:
         hren = data['commandforstatus']
         await bot.send_message(id, ps(hren))

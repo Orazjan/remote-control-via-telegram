@@ -33,13 +33,13 @@ def read_and_send_logs():
 def cancel():
     os.system("shutdown -a")
 
-def shutdown():
+def shutdown(secondy):
     os.system(
-        "shutdown -s -t 20 -c \"Сервер будет выключен через 20 секунд. Сохраните свои документы!\"")
+        f"shutdown -s -t {secondy} -c \"Сервер будет выключен через {secondy} секунд. Сохраните свои документы!\"")
 
-def reboot():
+def reboot(secondy):
     os.system(
-        "shutdown -r -t 20 -c \"Этот компьютер будет перезагружен через 20 секунд.\"")
+        f"shutdown -r -t {secondy} -c \"Этот компьютер будет перезагружен через {secondy} секунд.\"")
 
 def leave_session():
     os.system("shutdown -l")
