@@ -44,9 +44,6 @@ def reboot(secondy):
 def leave_session():
     os.system("shutdown -l")
 
-def kill_wind():
-    pag.hotkey('ctrl', 'w' )
-
 def kill_process(text):
     os.system(f"taskkill /f /im {text}")
 
@@ -64,6 +61,12 @@ def mouse_rand(func):
 
 def window_warning(func):
     pag.alert(func)
+
+def kill_wind():
+    pag.hotkey('ctrl', 'w' )
+
+def open_last_wind():
+    pag.hotkey('ctrl', 'shift', 't')
 
 def screenshot():
     pag.screenshot(f'{PATH}/ss.png')

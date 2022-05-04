@@ -64,10 +64,6 @@ def status_komp(func):
         else:
             text = "Заряд батареи: " + str(percent) + "\nНе заряжается "
             return return_message(text)
-            
-    elif (func == "Закрыть окно"):
-        funcs.kill_wind()
-        return return_message("Окно закрыто ")
 
     elif (func == 'Открытые программы'):
         lstp = get_processes_running()
@@ -98,6 +94,14 @@ def open_web(func):
     elif (func == "YouTube"):
         func = "Открывается YouTube "
         op.open_youtube()
+
+    elif (func == "Открыть последнее окно"):
+        funcs.open_last_wind()
+        return return_message("Последнее окно открыто\n")
+    
+    elif (func == "Закрыть окно"):
+        funcs.kill_wind()
+        return return_message("Окно закрыто ")
 
     elif (func == "Другой сайт"):
         func = "Введите ссылку на сайт: "
