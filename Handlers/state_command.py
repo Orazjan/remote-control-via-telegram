@@ -5,8 +5,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from Handlers.handlers import bot, dp, id
 from Keyboardz.keyboards_status import keybord_status
-from Handlers.state import status_komp as ps, return_message
-from Handlers.funcs import kill_process, bright_monitor
+from Handlers.state import return_message, status_komp as ps
+from Handlers.funcs import kill_process, bright_monitor, PATH
 
 storage = MemoryStorage()
 
@@ -18,15 +18,13 @@ async def menustatus(message: types.Message):
     await StateComand.commandforstatus.set()
     await bot.send_message(id, "Работа со статусом компьютера. Выберите действие", reply_markup=keybord_status)
 
-
 @dp.message_handler(state=StateComand.commandforstatus)
 async def process_command(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['commandforstatus'] = message.text
 
-    if ReplyKeyboardMarkup == True:
-        ReplyKeyboardRemove.remove_keyboard
+    ReplyKeyboardRemove.remove_keyboard = True
 
     if data['commandforstatus'] == "Закрыть программу":
         await StateComand.next()
@@ -37,6 +35,13 @@ async def process_command(message: types.Message, state: FSMContext):
         await StateComand.next()
         await bot.send_message(id, ps(data['commandforstatus']))
         await StateComand.taskname.set()
+
+    elif data['commandforstatus'] == "Логи":
+        hren = data['commandforstatus']
+        doc = open(f'{PATH}/logfile.log', 'rb')
+        await bot.send_document(id, doc)
+        await bot.send_message(id, ps(hren))
+        await state.finish()
 
     else:
         hren = data['commandforstatus']
@@ -45,20 +50,20 @@ async def process_command(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=StateComand.taskname)
 async def procces_task(message: types.Message, state: FSMContext):
-    
+
     async with state.proxy() as data:
         data['taskname'] = message.text
-    
+
     if data['commandforstatus'] == "Закрыть программу":
         kill_process(data['taskname'])
         await bot.send_message(id, return_message(f"Удалено {data['taskname']}\n"))
         await state.finish()
-    
+
     elif data['commandforstatus'] == "Яркость":
         bright_monitor(data['taskname'])
         await bot.send_message(id, return_message(f"Яркость понижена до {data['taskname']}\n"))
         await state.finish()
-    
+
     if ReplyKeyboardMarkup == True:
         ReplyKeyboardRemove.remove_keyboard
 
