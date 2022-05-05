@@ -1,12 +1,12 @@
-from Handlers import funcs
-from Keyboardz.keyboard_fun import *
-from aiogram import types, Dispatcher
-from aiogram.dispatcher import FSMContext
-from Handlers.handlers import bot, dp, id
-from Handlers.state import fun_segment as fs, return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
+from aiogram import types, Dispatcher
+from aiogram.dispatcher import FSMContext
+from Handlers.handlers import bot, dp, id
+from Handlers import funcs
+from Keyboardz.keyboard_fun import *
+from Handlers.state import fun_segment as fs, return_message
 
 storage = MemoryStorage()
 
@@ -27,18 +27,20 @@ async def fun_command(message: types.Message, state: FSMContext):
     if data['choosen']=="Скриншот экрана":
         funcs.screenshot()
         photo = open(f'{funcs.PATH}/ss.png', 'rb')
-        await bot.send_photo(id, photo) 
+        await bot.send_photo(id, photo)
+        await bot.send_message(id, return_message("Скриншот готов\n"))
+        await state.finish()
 
-    if (data['choosen'].startswith("Вывод")):
+    elif data['choosen']== "Вывод окна":
         await bot.send_message(id, fs(message.text), reply_markup=keyboard_wybor)
+        await statecomand.next()
+        await statecomand.zadacha.set()
     else:
         await bot.send_message(id, fs(data['choosen']))
-    
-    await statecomand.next()
-    await statecomand.zadacha.set()
+        await statecomand.next()
+        await statecomand.zadacha.set()
 
-    if (ReplyKeyboardMarkup == True):
-        ReplyKeyboardRemove.remove_keyboard   
+    ReplyKeyboardRemove.remove_keyboard = True
 
 @dp.message_handler(state=statecomand.zadacha)
 async def second(message: types.Message, state: FSMContext):
@@ -55,16 +57,12 @@ async def second(message: types.Message, state: FSMContext):
         hren = data['values']
         funcs.write_text(hren)
         await bot.send_message(id, return_message(f"Процесс {data['values']} готово.\n"))
-    
+
     elif (data['choosen'] == "Вывод окна"):
         hren = data['values']
         funcs.window_warning(hren)
         await bot.send_message(id, return_message(f"Процесс готово.\n"))
-    
-    elif (data['choosen'] == "Скриншот экрана"): 
-        await bot.send_message(id, return_message(f"Выбирайте действие.\n"))
-        await state.finish()
-        
+
     await state.finish()
 
     if (ReplyKeyboardMarkup == True):

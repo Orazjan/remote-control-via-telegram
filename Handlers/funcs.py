@@ -7,6 +7,8 @@ from Handlers import state, task_proc, handlers
 
 PATH = "D://Projects/PY/ForBot/notification/screens/"
 
+"""Статус сегмент"""
+
 def loggings():
     log_format = "%(levelname)s %(asctime)s - %(message)s"
     logging.basicConfig(filename = f"{PATH}/logfile.log",
@@ -30,8 +32,33 @@ def read_and_send_logs():
 
     return task_proc.list_to_string(array)
 
+def kill_process(text):
+    os.system(f"taskkill /f /im {text}")
+
+def get_brightness():
+    for monitor in sbc.list_monitors():
+        return f"Название монитора: {monitor}\nУровень яркости: {sbc.get_brightness(display=monitor)}%\n"
+
+def bright_monitor(procent):
+    sbc.set_brightness(procent)
+
+"""Опен сегмент"""
+    
+def kill_wind():
+    pag.hotkey('ctrl', 'w' )
+
+def open_last_wind():
+    pag.hotkey('ctrl', 'shift', 't')
+
+"""Хандлер сегмент"""
+
 def cancel():
     os.system("shutdown -a")
+
+def kill_func():
+    os.system("taskkill /f /im python.exe")
+
+"""Ворк сегмент"""
 
 def shutdown(secondy):
     os.system(
@@ -44,11 +71,7 @@ def reboot(secondy):
 def leave_session():
     os.system("shutdown -l")
 
-def kill_process(text):
-    os.system(f"taskkill /f /im {text}")
-
-def kill_func():
-    os.system("taskkill /f /im python.exe")
+"""Фан сегмент"""
 
 def write_text(text):
     pag.typewrite(f"{text}", interval=0.25)
@@ -62,18 +85,5 @@ def mouse_rand(func):
 def window_warning(func):
     pag.alert(func)
 
-def kill_wind():
-    pag.hotkey('ctrl', 'w' )
-
-def open_last_wind():
-    pag.hotkey('ctrl', 'shift', 't')
-
 def screenshot():
     pag.screenshot(f'{PATH}/ss.png')
-
-def get_brightness():
-    for monitor in sbc.list_monitors():
-        return f"Название монитора: {monitor}\nУровень яркости: {sbc.get_brightness(display=monitor)}%\n"
-
-def bright_monitor(procent):
-    sbc.set_brightness(procent)

@@ -20,6 +20,7 @@ def work_komp(func):
         func = "Вы покинете систему через несколько секунд "
         funcs.leave_session()
         return return_message(func)
+    
     elif func == 'Перезагрузка' or func == 'Завершение работы':
         return return_message('Введите количество секунд: \n')
 
@@ -30,6 +31,7 @@ def perezagruzka(text, seconds):
     if text == 'Перезагрузка':
         funcs.reboot(seconds)
         return return_message(f"Компьютер будет перезагружен через {seconds} секунд\n")
+    
     elif text == 'Завершение работы':
         funcs.shutdown(seconds)
         return return_message(f"Компьютер будет выключен через {seconds} секунд\n")
@@ -48,9 +50,9 @@ def fun_segment(func):
     elif (func == "Вывод окна"):
         return return_message("Введите текст или выберите из меню:\n")        
 
-    elif (func == "Скриншот экрана"):
-        return return_message("Скриншот готов ")
-
+    elif func == 'Другое':
+        return return_message("На данный момент данная функция не доступна, но мы работает над ней")
+        
     else:
         return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 
@@ -81,7 +83,9 @@ def status_komp(func):
 
     elif func == "Яркость":
         return return_message(f"{funcs.get_brightness()}\nУкажите уровень яркости:\n")
-
+    elif func == 'Звук':
+        return return_message("На данный момент данная функция не доступна, но мы работает над ней")
+    
     else:
         return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 
