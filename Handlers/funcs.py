@@ -5,7 +5,7 @@ import pyautogui as pag
 import screen_brightness_control as sbc
 from Handlers import state, task_proc, handlers
 
-PATH = "screens/"
+PATH = "D://Projects/PY/ForBot/notification/screens/"
 
 """Статус сегмент"""
 
