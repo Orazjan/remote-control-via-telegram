@@ -1,3 +1,4 @@
+import os
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
@@ -28,6 +29,7 @@ async def fun_command(message: types.Message, state: FSMContext):
         funcs.screenshot()
         photo = open(f'{funcs.PATH}/ss.png', 'rb')
         await bot.send_photo(id, photo)
+        os.remove(f'{funcs.PATH}/ss.png')
         await bot.send_message(id, return_message("Скриншот готов\n"))
         await state.finish()
 
