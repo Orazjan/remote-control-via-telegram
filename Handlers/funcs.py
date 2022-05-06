@@ -4,6 +4,7 @@ import random as rd
 import pyautogui as pag
 import screen_brightness_control as sbc
 from Handlers import state, task_proc, handlers
+from moduleforsound.sound import Sound
 
 PATH = "D://Projects/PY/ForBot/notification/screens/"
 
@@ -42,8 +43,16 @@ def get_brightness():
 def bright_monitor(procent):
     sbc.set_brightness(procent)
 
+def volume(level):
+    if level == "Max":
+        Sound.volume_max()
+    elif level == "Mute":
+        Sound.mute()
+    else:
+        Sound.volume_set(int(level))
+
 """Опен сегмент"""
-    
+
 def kill_wind():
     pag.hotkey('ctrl', 'w' )
 

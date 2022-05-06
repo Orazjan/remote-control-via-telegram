@@ -1,4 +1,4 @@
-from keyboard import Keyboard
+from moduleforsound.keyboard import Keyboard
 
 class Sound:
     """
@@ -98,7 +98,7 @@ class Sound:
         Keyboard.key(Keyboard.VK_VOLUME_DOWN)
 
 
-    @staticmethod
+    # @staticmethod
     def volume_set(amount):
         """
         Set the volume to a specific volume, limited to even numbers.

@@ -5,7 +5,6 @@ import Handlers.opens as op
 from Keyboardz.keyboard_fun import *
 from Handlers.task_proc import get_processes_running, list_to_string
 
-
 def return_time():
     d_t = datetime.now()
     b_t = d_t.strftime("%H:%M:%S - %d.%m")
@@ -52,6 +51,7 @@ def fun_segment(func):
 
     elif func == 'Другое':
         return return_message("На данный момент данная функция не доступна, но мы работает над ней")
+
     elif func == "Нажать на кнопку":
         return "Введите кнопку, которую нужно нажать:"
     
@@ -85,9 +85,10 @@ def status_komp(func):
 
     elif func == "Яркость":
         return return_message(f"{funcs.get_brightness()}\nУкажите уровень яркости:\n")
+
     elif func == 'Звук':
-        return return_message("На данный момент данная функция не доступна, но мы работает над ней")
-    
+        return "Введите уровень звука, который нужно установить:"
+
     else:
         return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 

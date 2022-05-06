@@ -1,22 +1,3 @@
-ERROR 2022-05-06 12:27:00,338 - For check 
+ERROR 2022-05-06 14:36:02,805 - For check 
 Первый компьютер
-12:27:00 - 06.05
-ERROR 2022-05-06 13:51:13,592 - Cause exception while getting updates.
-Traceback (most recent call last):
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 381, in start_polling
-    updates = await self.bot.get_updates(
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\bot\bot.py", line 110, in get_updates
-    result = await self.request(api.Methods.GET_UPDATES, payload)
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\bot\base.py", line 231, in request
-    return await api.make_request(await self.get_session(), self.server, self.__token, method, data, files,
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\bot\api.py", line 139, in make_request
-    async with session.post(url, data=req, **kwargs) as response:
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiohttp\client.py", line 1138, in __aenter__
-    self._resp = await self._coro
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiohttp\client.py", line 559, in _request
-    await resp.start(conn)
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiohttp\client_reqrep.py", line 893, in start
-    with self._timer:
-  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiohttp\helpers.py", line 721, in __exit__
-    raise asyncio.TimeoutError from None
-asyncio.exceptions.TimeoutError
+14:36:02 - 06.05

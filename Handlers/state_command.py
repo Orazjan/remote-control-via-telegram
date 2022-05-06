@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from Handlers.handlers import bot, dp, id
 from Keyboardz.keyboards_status import keybord_status
 from Handlers.state import return_message, status_komp as ps
-from Handlers.funcs import kill_process, bright_monitor, PATH
+from Handlers import funcs
 
 storage = MemoryStorage()
 
@@ -36,9 +36,14 @@ async def process_command(message: types.Message, state: FSMContext):
         await bot.send_message(id, ps(data['commandforstatus']))
         await StateComand.taskname.set()
 
+    elif data['commandforstatus'] == "Звук":
+        await StateComand.next()
+        await bot.send_message(id, ps(data['commandforstatus']))
+        await StateComand.taskname.set()
+
     elif data['commandforstatus'] == "Логи":
         hren = data['commandforstatus']
-        doc = open(f'{PATH}/logfile.log', 'rb')
+        doc = open(f'{funcs.PATH}/logfile.log', 'rb')
         await bot.send_document(id, doc)
         await bot.send_message(id, ps(hren))
         await state.finish()
@@ -55,17 +60,21 @@ async def procces_task(message: types.Message, state: FSMContext):
         data['taskname'] = message.text
 
     if data['commandforstatus'] == "Закрыть программу":
-        kill_process(data['taskname'])
+        funcs.kill_process(data['taskname'])
         await bot.send_message(id, return_message(f"Удалено {data['taskname']}\n"))
         await state.finish()
 
     elif data['commandforstatus'] == "Яркость":
-        bright_monitor(data['taskname'])
-        await bot.send_message(id, return_message(f"Яркость понижена до {data['taskname']}\n"))
+        funcs.bright_monitor(data['taskname'])
+        await bot.send_message(id, return_message(f"Яркость установлена на {data['taskname']}%\n"))
         await state.finish()
 
-    if ReplyKeyboardMarkup == True:
-        ReplyKeyboardRemove.remove_keyboard
+    elif data['commandforstatus'] == "Звук":
+        funcs.volume(data['taskname'])
+        await bot.send_message(id, return_message(f"Звук установлен на {data['taskname']}%\n"))
+        await state.finish()
+
+    ReplyKeyboardRemove.remove_keyboard = True
 
 def register_handler_state_command(dp: Dispatcher):
     dp.register_message_handler(menustatus, commands=['status'])

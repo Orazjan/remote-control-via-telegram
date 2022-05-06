@@ -37,6 +37,7 @@ async def fun_command(message: types.Message, state: FSMContext):
         await bot.send_message(id, fs(message.text), reply_markup=keyboard_wybor)
         await statecomand.next()
         await statecomand.zadacha.set()
+
     else:
         await bot.send_message(id, fs(data['choosen']))
         await statecomand.next()
