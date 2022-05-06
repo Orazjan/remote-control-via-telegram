@@ -6,13 +6,13 @@ import screen_brightness_control as sbc
 from Handlers import state, task_proc, handlers
 from moduleforsound.sound import Sound
 
-PATH = "D://Projects/PY/ForBot/notification/screens/"
+PATH = os.path.abspath('./screen/')
 
 """Статус сегмент"""
 
 def loggings():
     log_format = "%(levelname)s %(asctime)s - %(message)s"
-    logging.basicConfig(filename = f"{PATH}/logfile.log",
+    logging.basicConfig(filename = f"{PATH}logfile.log",
                     filemode = "w",
                     format = log_format,
                     level = logging.ERROR)
@@ -23,7 +23,7 @@ def loggings():
 
 def read_and_send_logs():
     try:
-        logfile = open(f'{PATH}/logfile.log')
+        logfile = open(f'{PATH}logfile.log')
     except FileNotFoundError:
         return "Ошибка: Файл не найден"
 
@@ -98,4 +98,12 @@ def press_keyboard(text):
     pag.hotkey(f'{text}')
 
 def screenshot():
-    pag.screenshot(f'{PATH}/ss.png')
+    pag.screenshot(f'{PATH}ss.png')
+
+"""Хендлер сегмент"""
+def help():
+    text = "Start - включение /проверка работает или нет\n"
+    text += "Rabota - Перезагрузка /выключение /выйти из системы\n"
+    text += "Status - батарея /яркость /звук /открытые программы /закрыть программу /логи\n"
+    text += "Open_web - открыть вк /youtube /закрыть окно /открыть последнее окно\n"
+    return text

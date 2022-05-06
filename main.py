@@ -1,6 +1,3 @@
-"""
-    just Main
-"""
 from aiogram.utils import executor
 import Handlers.handlers as HD
 from Handlers.funcs import loggings

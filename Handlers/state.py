@@ -2,14 +2,12 @@ from datetime import datetime
 import psutil
 from Handlers import funcs
 import Handlers.opens as op
-from Keyboardz.keyboard_fun import *
 from Handlers.task_proc import get_processes_running, list_to_string
 
 def return_time():
     d_t = datetime.now()
     b_t = d_t.strftime("%H:%M:%S - %d.%m")
     return b_t
-
 
 def return_message(text):
     return text + return_time()
