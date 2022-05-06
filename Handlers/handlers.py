@@ -14,21 +14,20 @@ identify = env.int('id')
 bot = Bot(token=env.str('Api_Token'))
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
-proccessor = ''
 
 def get_proc():
     if (platform.processor()==env.str("kompfirst")):
-        global proccessor
         proccessor = "Первый компьютер\n"
-    else:
-        proccessor = f'Другой комп {platform.processor()}\n'
+        return proccessor
+    proccessor = f'Другой комп: {platform.processor()}\n'
+    return proccessor
 
 async def on_startup():
     await bot.send_message(identify, st.return_message(f"Компьютер \n{get_proc()} \nвключён в "),reply_markup=ReplyKeyboardRemove())
 
 
 async def working(message: types.message):
-    await bot.send_message(identify, st.return_message(f"Работает: {proccessor}\n"),reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(identify, st.return_message(f"Работает: {get_proc()}\n"),reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):
