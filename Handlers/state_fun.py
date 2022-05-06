@@ -46,7 +46,7 @@ async def fun_command(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=statecomand.zadacha)
 async def second(message: types.Message, state: FSMContext):
-    
+
     async with state.proxy() as data:
         data['values'] = message.text
 
@@ -65,11 +65,14 @@ async def second(message: types.Message, state: FSMContext):
         funcs.window_warning(hren)
         await bot.send_message(id, return_message(f"Процесс готово.\n"))
 
+    elif(data['choosen'] == "Нажать на кнопку"):
+        hren = data['values']
+        funcs.press_keyboard(hren)
+        await bot.send_message(id, return_message(f"Кнопка {hren} нажата.\n"))
+
+    ReplyKeyboardRemove.remove_keyboard = True
+
     await state.finish()
-
-    if (ReplyKeyboardMarkup == True):
-        ReplyKeyboardRemove.remove_keyboard
-
 
 def register_handler_fun_command(dp: Dispatcher):
     dp.register_message_handler(menu_fun, commands=['funfun'])

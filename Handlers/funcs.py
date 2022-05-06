@@ -85,5 +85,8 @@ def mouse_rand(func):
 def window_warning(func):
     pag.alert(func)
 
+def press_keyboard(text):
+    pag.hotkey(f'{text}')
+
 def screenshot():
     pag.screenshot(f'{PATH}/ss.png')
