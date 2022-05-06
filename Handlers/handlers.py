@@ -15,6 +15,18 @@ bot = Bot(token=env.str('Api_Token'))
 storage = MemoryStorage()
 dp = Dispatcher(bot,storage=storage)
 
+async def setup_bot_commands():
+    bot_commands = [
+        types.BotCommand(command="/start", description="Начать/перезапустить"),
+        types.BotCommand(command="/help", description="Что я умею?"),
+        types.BotCommand(command="/rabota", description="Работа компьютера"),
+        types.BotCommand(command="/status", description="Состояние компьютера"),
+        types.BotCommand(command="/openweb", description="Открыть сайт"),
+        types.BotCommand(command="/kill", description="Отключить программу"),
+        types.BotCommand(command="/cancel", description="Отмена действия при выключении") 
+    ]
+    await bot.set_my_commands(bot_commands)
+
 def get_proc():
     if (platform.processor()==env.str("kompfirst")):
         proccessor = "Первый компьютер\n"
@@ -23,6 +35,7 @@ def get_proc():
     return proccessor
 
 async def on_startup():
+    await setup_bot_commands()
     await bot.send_message(identify, st.return_message(f"Компьютер \n{get_proc()} \nвключён в "),reply_markup=ReplyKeyboardRemove())
 
 

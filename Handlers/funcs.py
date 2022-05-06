@@ -101,6 +101,7 @@ def screenshot():
     pag.screenshot(f'{PATH}ss.png')
 
 """Хендлер сегмент"""
+
 def help():
     text = "Start - включение /проверка работает или нет\n"
     text += "Rabota - Перезагрузка /выключение /выйти из системы\n"
