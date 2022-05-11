@@ -17,6 +17,11 @@ def work_komp(func):
         func = "Вы покинете систему через несколько секунд "
         funcs.leave_session()
 
+    elif func == "Заблокировать экран":
+        func = 'Компьютер заблокирован '
+        funcs.lock_screen()
+        return_message(func)
+
     elif func == 'Перезагрузка' or func == 'Завершение работы':
         return return_message('Введите количество секунд: \n')
 

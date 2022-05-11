@@ -80,6 +80,9 @@ def reboot(secondy):
 def leave_session():
     os.system("shutdown -l")
 
+def lock_screen():
+    os.system(f"{'%'}SystemRoot%/system32/rundll32.exe USER32.DLL LockWorkStation")
+
 """Фан сегмент"""
 
 def write_text(text):
@@ -104,7 +107,7 @@ def screenshot():
 
 def help():
     text = "Start - включение /проверка работает или нет\n"
-    text += "Rabota - Перезагрузка /выключение /выйти из системы\n"
+    text += "Rabota - Перезагрузка /выключение /выйти из системы /заблокировать экран\n"
     text += "Status - батарея /яркость /звук /открытые программы /закрыть программу /логи\n"
     text += "Open_web - открыть вк /youtube /закрыть окно /открыть последнее окно\n"
     return text
