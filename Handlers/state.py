@@ -94,10 +94,12 @@ def open_web(func):
     if (func == "Vk"):
         func = "Открывается ВК "
         op.open_vk()
+        return return_message(func + " ")
 
     elif (func == "YouTube"):
         func = "Открывается YouTube "
         op.open_youtube()
+        return return_message(func + " ")
 
     elif (func == "Открыть последнее окно"):
         funcs.open_last_wind()

@@ -14,45 +14,37 @@ class opencomand(StatesGroup):
     commamnd = State()
     urlname = State()
 
-
 async def menu_web(message: types.Message):
     await opencomand.commamnd.set()
-    await bot.send_message(identify, "Открытие сайта. Выбрите сайт:\n", reply_markup=keyboard_open)
-
+    await bot.send_message(identify, "Открытие сайта. Выберите сайт:\n", reply_markup=keyboard_open)
 
 @dp.message_handler(state=opencomand.commamnd)
 async def process_command(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['comandn'] = message.text
-    
-    if (message.text != "Другой сайт"):
-        
-        hren = data['comandn']
-        await bot.send_message(identify, ow(hren))
+
+    if message.text != "Другой сайт":
+        await bot.send_message(identify, ow(data['comandn']))
         await state.finish()
-    
+
     else:
         await opencomand.next()
-        await bot.send_message(identify, "Введите ссылку\n")
+        await bot.send_message(identify, ow(data['comandn']))
         await opencomand.urlname.set()
 
-    
-    if (ReplyKeyboardMarkup == True):
-        ReplyKeyboardRemove.remove_keyboard
-
+    ReplyKeyboardRemove.remove_keyboard = True
 
 @dp.message_handler(state=opencomand.urlname)
 async def procces_task(message: types.Message, state: FSMContext):
-    
+
     async with state.proxy() as data:
         data['urlname'] = message.text
 
     opens.open_web(data['urlname'])    
     await bot.send_message(identify, return_message(f"Ссылка открыта \n"))
     await state.finish()
-    if (ReplyKeyboardMarkup == True):
-        ReplyKeyboardRemove.remove_keyboard
+    ReplyKeyboardRemove.remove_keyboard = True
 
 def register_handler_state_open(dp: Dispatcher):
     dp.register_message_handler(menu_web, commands=['openweb'])
