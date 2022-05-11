@@ -62,4 +62,3 @@ async def send_random_value(call: types.CallbackQuery):
 """
 def register_handler_state_work(dp: Dispatcher):
     dp.register_message_handler(menu_work, commands=['rabota'])
-    dp.register_message_handler(send_random_value, commands=['control'])

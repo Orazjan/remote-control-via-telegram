@@ -11,12 +11,13 @@ PATH = os.path.abspath('./screen/')
 """Статус сегмент"""
 
 def loggings():
+    logging.basicConfig(level=logging.INFO)
     log_format = "%(levelname)s %(asctime)s - %(message)s"
     logging.basicConfig(filename = f"{PATH}logfile.log",
                     filemode = "w",
                     format = log_format,
                     level = logging.ERROR)
-
+    
     logger = logging.getLogger()
     logger.error(state.return_message(f"For check \n{handlers.get_proc()}"))
     logger.info(state.return_message(f"This is log file {handlers.get_proc()}"))
