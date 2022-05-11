@@ -22,9 +22,6 @@ def work_komp(func):
         funcs.lock_screen()
         return_message(func)
 
-    elif func == 'Управление':
-        return return_message("Хуйня какая-то")
-
     elif func == 'Перезагрузка' or func == 'Завершение работы':
         return return_message('Введите количество секунд: \n')
 

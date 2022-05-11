@@ -11,7 +11,6 @@ PATH = os.path.abspath('./screen/')
 """Статус сегмент"""
 
 def loggings():
-    logging.basicConfig(level=logging.INFO)
     log_format = "%(levelname)s %(asctime)s - %(message)s"
     logging.basicConfig(filename = f"{PATH}logfile.log",
                     filemode = "w",

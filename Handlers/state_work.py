@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove
 from Handlers.state import work_komp as ps, perezagruzka
 from Handlers.handlers import bot, dp, identify
-from Keyboardz import keybords_komp, keyboard_call_back
+from Keyboardz import keybords_komp
 import pyautogui as pag
 import random as rd
 
@@ -42,23 +42,5 @@ async def set_seconds(message: types.Message, state: FSMContext):
     await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
 
-"""call back"""
-
-@dp.message_handler(commands="random")
-async def cmd_random(message: types.Message):
-    # keyboard = types.InlineKeyboardMarkup()
-    # keyboard.add(types.InlineKeyboardButton(text="Нажми меня", callback_data="random_value"))
-    await message.answer("Нажмите на кнопку, чтобы управлять клавиатурой", reply_markup=keyboard_call_back.get_keyboard(), callback_data='up')
-
-@dp.callback_query_handler(text = 'up')
-async def send_random_value(call: types.CallbackQuery):
-    await call.message.answer(str(rd.randint(1, 10)))
-    await call.answer(text="Спасибо, что воспользовались ботом!", show_alert=True)
-    # или просто await call.answer()
-
-
-
-"""end call back
-"""
 def register_handler_state_work(dp: Dispatcher):
     dp.register_message_handler(menu_work, commands=['rabota'])

@@ -22,6 +22,7 @@ async def setup_bot_commands():
         types.BotCommand(command="/rabota", description="Работа компьютера"),
         types.BotCommand(command="/status", description="Состояние компьютера"),
         types.BotCommand(command="/openweb", description="Открыть сайт"),
+        types.BotCommand(command="/control", description="Для управления"),
         types.BotCommand(command="/kill", description="Отключить программу"),
         types.BotCommand(command="/cancel", description="Отмена действия при выключении") 
     ]
