@@ -48,12 +48,13 @@ async def vote_down_cb_handler(call: types.CallbackQuery):
 @dp.callback_query_handler(vote_cb.filter(action='end'))
 async def vote_down_cb_handler(call: types.CallbackQuery):
     await bot.send_message(identify, "Выберите команду: ")
+    await storage.finish()
 
 
 @dp.errors_handler(exception=MessageNotModified)  # for skipping this exception
 async def message_not_modified_handler(update, error):
+    await storage.finish()
     return True
-
 
 def register_handler_control(dp: Dispatcher):
     dp.register_message_handler(cmd_control, commands=['control'])
