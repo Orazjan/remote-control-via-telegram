@@ -19,6 +19,7 @@ def get_keyboard(amount):
         types.InlineKeyboardButton('left', callback_data=vote_cb.new(action='left', amount=amount)),
         types.InlineKeyboardButton('right', callback_data=vote_cb.new(action='right', amount=amount))).add(
         types.InlineKeyboardButton('down', callback_data=vote_cb.new(action='down', amount=amount))).add(
+        types.InlineKeyboardButton('play\pause', callback_data=vote_cb.new(action='pause', amount=amount))).add(
         types.InlineKeyboardButton('end', callback_data=vote_cb.new(action='end', amount=amount)))
 
 async def cmd_control(message: types.Message):
@@ -44,6 +45,9 @@ async def vote_down_cb_handler(call: types.CallbackQuery):
 async def vote_down_cb_handler(call: types.CallbackQuery):
     pag.press('right')
 
+@dp.callback_query_handler(vote_cb.filter(action='pause'))
+async def vote_down_cb_handler(call: types.CallbackQuery):
+    pag.press('playpause')
 
 @dp.callback_query_handler(vote_cb.filter(action='end'))
 async def vote_down_cb_handler(call: types.CallbackQuery):
