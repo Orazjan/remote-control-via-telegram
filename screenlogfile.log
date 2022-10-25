@@ -1,3 +1,61 @@
-ERROR 2022-07-03 15:16:46,421 - For check 
+ERROR 2022-10-25 22:49:51,380 - For check 
 Первый компьютер
-15:16:46 - 03.07
+22:49:51 - 25.10
+ERROR 2022-10-25 22:50:20,017 - Task exception was never retrieved
+future: <Task finished name='Task-36' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=ValueError("could not convert string to float: '/status'")>
+Traceback (most recent call last):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "d:\Projects\PY\ForBot\notification\Handlers\state_command.py", line 68, in procces_task
+    funcs.bright_monitor(data['taskname'])
+  File "d:\Projects\PY\ForBot\notification\Handlers\funcs.py", line 44, in bright_monitor
+    sbc.set_brightness(procent)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\screen_brightness_control\__init__.py", line 120, in set_brightness
+    value = int(float(str(value)))
+ValueError: could not convert string to float: '/status'
+ERROR 2022-10-25 22:52:21,603 - Task exception was never retrieved
+future: <Task finished name='Task-148' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=ValueError("invalid literal for int() with base 10: '/funfun'")>
+Traceback (most recent call last):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "d:\Projects\PY\ForBot\notification\Handlers\state_fun.py", line 56, in second
+    funcs.mouse_rand(hren)
+  File "d:\Projects\PY\ForBot\notification\Handlers\funcs.py", line 95, in mouse_rand
+    pag.moveTo(value_for_x, value_for_y, int(func))
+ValueError: invalid literal for int() with base 10: '/funfun'
+ERROR 2022-10-25 22:52:43,920 - Task exception was never retrieved
+future: <Task finished name='Task-167' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=PyScreezeException('The Pillow package is required to use this function.')>
+Traceback (most recent call last):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "d:\Projects\PY\ForBot\notification\Handlers\state_fun.py", line 29, in fun_command
+    funcs.screenshot()
+  File "d:\Projects\PY\ForBot\notification\Handlers\funcs.py", line 104, in screenshot
+    pag.screenshot(f'{PATH}ss.png')
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python310\lib\site-packages\pyscreeze\__init__.py", line 144, in wrapper
+    raise PyScreezeException('The Pillow package is required to use this function.')
+pyscreeze.PyScreezeException: The Pillow package is required to use this function.

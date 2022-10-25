@@ -11,13 +11,16 @@ from Handlers.state import fun_segment as fs, return_message
 
 storage = MemoryStorage()
 
+
 class statecomand(StatesGroup):
     commandforfun = State()
     zadacha = State()
 
+
 async def menu_fun(message: types.Message):
     await statecomand.commandforfun.set()
     await bot.send_message(identify, "Глава интересное. Выберите действие", reply_markup=keyBoard_funs)
+
 
 @dp.message_handler(state=statecomand.commandforfun)
 async def fun_command(message: types.Message, state: FSMContext):
@@ -25,7 +28,7 @@ async def fun_command(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['choosen'] = message.text
 
-    if data['choosen']=="Скриншот экрана":
+    if data['choosen'] == "Скриншот экрана":
         funcs.screenshot()
         photo = open(f'{funcs.PATH}ss.png', 'rb')
         await bot.send_photo(identify, photo)
@@ -33,7 +36,7 @@ async def fun_command(message: types.Message, state: FSMContext):
         await bot.send_message(identify, return_message("Скриншот готов\n"))
         await state.finish()
 
-    elif data['choosen']== "Вывод окна":
+    elif data['choosen'] == "Вывод окна":
         await bot.send_message(identify, fs(message.text), reply_markup=keyboard_wybor)
         await statecomand.next()
         await statecomand.zadacha.set()
@@ -45,13 +48,14 @@ async def fun_command(message: types.Message, state: FSMContext):
 
     ReplyKeyboardRemove.remove_keyboard = True
 
+
 @dp.message_handler(state=statecomand.zadacha)
 async def second(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['values'] = message.text
 
-    if(data['choosen'] == "Рандом с мышкой"):
+    if (data['choosen'] == "Рандом с мышкой"):
         hren = data['values']
         funcs.mouse_rand(hren)
         await bot.send_message(identify, return_message(f"Процесс готово.\n"))
@@ -66,7 +70,7 @@ async def second(message: types.Message, state: FSMContext):
         funcs.window_warning(hren)
         await bot.send_message(identify, return_message(f"Процесс готово.\n"))
 
-    elif(data['choosen'] == "Нажать на кнопку"):
+    elif (data['choosen'] == "Нажать на кнопку"):
         hren = data['values']
         funcs.press_keyboard(hren)
         await bot.send_message(identify, return_message(f"Кнопка {hren} нажата.\n"))
@@ -75,6 +79,6 @@ async def second(message: types.Message, state: FSMContext):
 
     await state.finish()
 
+
 def register_handler_fun_command(dp: Dispatcher):
     dp.register_message_handler(menu_fun, commands=['funfun'])
-    
