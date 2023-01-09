@@ -126,7 +126,7 @@ def press_keyboard(text):
 
 
 def screenshot():
-    pag.screenshot(f'{PATH}/ss.png')
+    pag.screenshot(f'{PATH}ss.png')
 
 
 """Хендлер сегмент"""
