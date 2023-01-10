@@ -1,17 +1,45 @@
 from aiogram import types, Dispatcher
-
 from aiogram.types import ReplyKeyboardRemove
-
 from Handlers.handlers import bot, dp, identify
+from aiogram.dispatcher import FSMContext
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from Keyboardz.keyboards_commands import keyboard_commands
-from Handlers.state import return_message, status_komp as ps
 from Handlers import funcs
 
-async def comands(message: types.Message):
-    await bot.send_message(identify, return_message("Выберите команду для исполнения "), reply_markup=keyboard_commands)
-    
+storage = MemoryStorage()
 
-ReplyKeyboardRemove.remove_keyboard = True
+
+class buttons_commands(StatesGroup):
+    commamnd = State()
+
+
+async def button_command(message: types.Message):
+    await buttons_commands.commamnd.set()
+    await bot.send_message(identify, "Выберите команду\n", reply_markup=keyboard_commands)
+
+
+@dp.message_handler(state=buttons_commands.commamnd)
+async def process_command(message: types.Message, state: FSMContext):
+
+    async with state.proxy() as data:
+        data['comandn'] = message.text
+
+    if message.text == "ALT F4":
+        await bot.send_message(identify, "ALT F4")
+        funcs.closealt()
+        await state.finish()
+
+    elif message.text == "ALT TAB":
+        await bot.send_message(identify, "ALT F4")
+        funcs.alttab()
+        await state.finish()
+    else:
+        await bot.send_message(identify, "Неправильная команда")
+        await state.finish()
+        
+    ReplyKeyboardRemove.remove_keyboard = True
+
 
 def register_handler_state_button(dp: Dispatcher):
-    dp.register_message_handler(comands, commands=['comands'])
+    dp.register_message_handler(button_command, commands=['comands'])
