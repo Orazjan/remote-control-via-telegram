@@ -13,5 +13,5 @@ async def comands(message: types.Message):
 
 ReplyKeyboardRemove.remove_keyboard = True
 
-def register_handler_state_command(dp: Dispatcher):
+def register_handler_state_button(dp: Dispatcher):
     dp.register_message_handler(comands, commands=['comands'])

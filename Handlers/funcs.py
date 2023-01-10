@@ -129,7 +129,16 @@ def screenshot():
     pag.screenshot(f'{PATH}ss.png')
 
 
-"""Хендлер сегмент"""
+"""Command segment"""
+
+def closealt():
+    pag.hotkey('alt', 'f4')
+
+def alttab():
+    pag.hotkey('alt', 'tab')
+
+    
+""""""
 
 
 def help():
