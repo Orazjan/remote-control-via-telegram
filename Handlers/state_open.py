@@ -15,8 +15,11 @@ class opencomand(StatesGroup):
     urlname = State()
 
 async def menu_web(message: types.Message):
-    await opencomand.commamnd.set()
-    await bot.send_message(identify, "Открытие сайта. Выберите сайт:\n", reply_markup=keyboard_open)
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await opencomand.commamnd.set()
+        await bot.send_message(identify, "Открытие сайта. Выберите сайт:\n", reply_markup=keyboard_open)
 
 @dp.message_handler(state=opencomand.commamnd)
 async def process_command(message: types.Message, state: FSMContext):

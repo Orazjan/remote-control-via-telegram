@@ -18,8 +18,11 @@ class statecomand(StatesGroup):
 
 
 async def menu_fun(message: types.Message):
-    await statecomand.commandforfun.set()
-    await bot.send_message(identify, "Глава интересное. Выберите действие", reply_markup=keyBoard_funs)
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await statecomand.commandforfun.set()
+        await bot.send_message(identify, "Глава интересное. Выберите действие", reply_markup=keyBoard_funs)
 
 
 @dp.message_handler(state=statecomand.commandforfun)
@@ -60,20 +63,10 @@ async def second(message: types.Message, state: FSMContext):
         funcs.mouse_rand(hren)
         await bot.send_message(identify, return_message(f"Процесс готово.\n"))
 
-    elif (data['choosen'] == "Напечатать"):
-        hren = data['values']
-        funcs.write_text(hren)
-        await bot.send_message(identify, return_message(f"Процесс {data['values']} готово.\n"))
-
     elif (data['choosen'] == "Вывод окна"):
         hren = data['values']
         funcs.window_warning(hren)
         await bot.send_message(identify, return_message(f"Процесс готово.\n"))
-
-    elif (data['choosen'] == "Нажать на кнопку"):
-        hren = data['values']
-        funcs.press_keyboard(hren)
-        await bot.send_message(identify, return_message(f"Кнопка {hren} нажата.\n"))
 
     ReplyKeyboardRemove.remove_keyboard = True
 

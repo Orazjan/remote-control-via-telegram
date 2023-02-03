@@ -13,8 +13,11 @@ class work_comands(StatesGroup):
     set_secconds = State()
 
 async def menu_work(message: types.Message):
-    await work_comands.commamnd.set()
-    await bot.send_message(identify, "Работа с компьютером. Выберите действие", reply_markup=keybords_komp.keybord_komp)
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await work_comands.commamnd.set()
+        await bot.send_message(identify, "Работа с компьютером. Выберите действие", reply_markup=keybords_komp.keybord_komp)
 
 @dp.message_handler(state=work_comands.commamnd)
 async def process_name(message: types.Message, state: FSMContext):

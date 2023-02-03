@@ -26,7 +26,10 @@ def get_keyboard(amount):
 
 
 async def cmd_control(message: types.Message):
-    await bot.send_message(identify, 'Выбирайте действие: ', reply_markup=get_keyboard(0))
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await bot.send_message(identify, 'Выбирайте действие: ', reply_markup=get_keyboard(0))
 
 
 @dp.callback_query_handler(vote_cb.filter(action='up'))

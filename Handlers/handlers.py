@@ -45,21 +45,33 @@ async def setup_bot_commands():
     await bot.set_my_commands(bot_commands)
 
 async def working(message: types.message):
-    await bot.send_message(identify, st.return_message(f"Работает: {get_proc()}\n"), reply_markup=ReplyKeyboardRemove())
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await bot.send_message(identify, st.return_message(f"Работает: {get_proc()}\n"), reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):
-    await bot.send_message(identify, st.return_message("Отмена действия "))
-    fun.cancel()
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await bot.send_message(identify, st.return_message("Отмена действия "))
+        fun.cancel()
 
 
 async def help(message: types.Message):
-    await bot.send_message(identify, fun.help())
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await bot.send_message(identify, fun.help())
 
 
 async def kill(message: types.Message):
-    await bot.send_message(identify, st.return_message("Программа отключается "))
-    fun.kill_func()
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await bot.send_message(identify, st.return_message("Программа отключается "))
+        fun.kill_func()
 
 
 def register_handler_client(dp: Dispatcher):

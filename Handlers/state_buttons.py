@@ -15,8 +15,11 @@ class buttons_commands(StatesGroup):
 
 
 async def button_command(message: types.Message):
-    await buttons_commands.commamnd.set()
-    await bot.send_message(identify, "Выберите команду\n", reply_markup=keyboard_commands)
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await buttons_commands.commamnd.set()
+        await bot.send_message(identify, "Выберите команду\n", reply_markup=keyboard_commands)
 
 
 @dp.message_handler(state=buttons_commands.commamnd)

@@ -15,8 +15,11 @@ class StateComand(StatesGroup):
     taskname = State()
 
 async def menustatus(message: types.Message):
-    await StateComand.commandforstatus.set()
-    await bot.send_message(identify, "Работа со статусом компьютера. Выберите действие", reply_markup=keybord_status)
+    if (message.from_id != identify):
+        await bot.send_message(message.from_user.id, "Неправильная команда")
+    else:
+        await StateComand.commandforstatus.set()
+        await bot.send_message(identify, "Работа со статусом компьютера. Выберите действие", reply_markup=keybord_status)
 
 @dp.message_handler(state=StateComand.commandforstatus)
 async def process_command(message: types.Message, state: FSMContext):
