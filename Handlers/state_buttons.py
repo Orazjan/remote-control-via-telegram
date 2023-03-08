@@ -34,13 +34,14 @@ async def process_command(message: types.Message, state: FSMContext):
         await state.finish()
 
     elif message.text == "ALT TAB":
-        await bot.send_message(identify, "ALT F4")
+        await bot.send_message(identify, "ALT TAB")
         funcs.alttab()
         await state.finish()
+        
     else:
         await bot.send_message(identify, "Неправильная команда")
         await state.finish()
-        
+
     ReplyKeyboardRemove.remove_keyboard = True
 
 
