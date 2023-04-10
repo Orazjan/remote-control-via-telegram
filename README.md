@@ -1,18 +1,8 @@
-# notification
-
-text for vbs file in autorun
-
-Set WshShell = CreateObject("WScript.Shell")
-WshShell.Run "Path to awtorun.bat", 0, false
-
-text for bat file
-
-TIMEOUT /T 3
-D:
-RD /S /Q "path to folder where git project has been cloned"
-TIMEOUT /T 3
-cd "path to folder where git project has been cloned"
-git clone https://github.com/Orazjan/notification.git 
-TIMEOUT /T 3
-Path to python.exe or write python if its in windows path Path to main.py from where git cloned project
-
+Hello. In this project, I created a Telegram bot to control a computer. 
+The bot is built on the Aiogramm library and uses a large number of libraries. 
+To use it, you first need to create a file named .env in the directory where you will store your personal Telegram ID and Bot Token. 
+For security reasons, I suggest saving this file separately.
+Then, there is information on how to set up the variables. 
+For example: id="Your Telegram ID (without quotes)", Api_Token="Unique Token from your Telegram bot (in quotes)". 
+There is also information about the computer: kompfirst="Information about the computer in quotes." 
+If you do not need this information, you can simply delete it or rewrite the code in the Handlers.py file from the get_proc function.
