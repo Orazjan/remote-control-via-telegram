@@ -16,3 +16,10 @@ CB.register_handler_control(HD.dp)
 
 executor.start(HD.dp, HD.on_startup())
 executor.start_polling(HD.dp, skip_updates=True)
+#####################################################
+#                                                   #
+#                                                   #
+#№№№№№№№№№№№№№ Не забыть убрать ЛОГ##################
+#                                                   #
+#                                                   #
+#####################################################
