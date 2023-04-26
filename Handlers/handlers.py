@@ -14,7 +14,7 @@ identify = env.int('id')
 bot = Bot(token=env.str('Api_Token'))
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
-startTime = ""
+
 
 def get_proc():
     if (platform.processor() == env.str("kompfirst")):
@@ -26,7 +26,7 @@ def get_proc():
 
 async def on_startup():
     await setup_bot_commands()
-    startTime = st.return_time();
+    st.startTime = st.return_time();
     await bot.send_message(identify, st.return_message(f"Компьютер \n{get_proc()} \nвключён в "), reply_markup=ReplyKeyboardRemove())
 
 async def setup_bot_commands():
@@ -49,7 +49,7 @@ async def working(message: types.message):
     if (message.from_id != identify):
         await bot.send_message(message.from_user.id, "Неправильная команда")
     else:
-        await bot.send_message(identify, f"Работает: {get_proc()}\n {startTime}", reply_markup=ReplyKeyboardRemove())
+        await bot.send_message(identify, f"Работает: {get_proc()}\n {st.startTime}", reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):

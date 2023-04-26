@@ -12,7 +12,7 @@ from Handlers import state_work as SG, state_command as SC, state_open as SO, st
 #                                                   #
 #####################################################
 
-# loggings()
+loggings()
 
 HD.register_handler_client(HD.dp)
 SG.register_handler_state_work(HD.dp)

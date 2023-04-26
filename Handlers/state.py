@@ -4,6 +4,7 @@ from Handlers import funcs
 import Handlers.opens as op
 from Handlers.task_proc import get_processes_running, list_to_string
 
+startTime = ""
 
 def return_time():
     d_t = datetime.now()
