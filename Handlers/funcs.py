@@ -124,6 +124,8 @@ def screenshot():
 
 def get_photo_from_camera():
     cap = cv2.VideoCapture(0)
+    for i in range(40):
+        cap.read()
     ret, frame = cap.read()
  
     # Записываем в файл
