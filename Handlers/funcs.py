@@ -49,6 +49,8 @@ def get_brightness():
 def bright_monitor(procent):
     sbc.set_brightness(procent)
 
+def get_sound_volume():
+    return Sound.current_volume()
 
 def volume(level):
     if level == "Max":

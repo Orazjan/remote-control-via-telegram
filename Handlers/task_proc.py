@@ -17,5 +17,5 @@ def get_processes_running():
 def list_to_string(text):
     str1 = ""
     for ele in text:
-        str1 += ele  
+        str1 += ele
     return str1

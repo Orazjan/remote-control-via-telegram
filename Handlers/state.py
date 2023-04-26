@@ -91,7 +91,7 @@ def status_komp(func):
         return return_message(f"{funcs.get_brightness()}\nУкажите уровень яркости:\n")
 
     elif func == 'Звук':
-        return "Введите уровень звука, который нужно установить:"
+        return (f"Уровень звука {funcs.get_sound_volume()}\nВведите уровень звука, который нужно установить:")
 
     else:
         return return_message('Неправильная команда. Попробуйте выбрать другую\n')

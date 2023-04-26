@@ -15,7 +15,6 @@ bot = Bot(token=env.str('Api_Token'))
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-
 def get_proc():
     if (platform.processor() == env.str("kompfirst")):
         proccessor = "Первый компьютер\n"
@@ -49,7 +48,7 @@ async def working(message: types.message):
     if (message.from_id != identify):
         await bot.send_message(message.from_user.id, "Неправильная команда")
     else:
-        await bot.send_message(identify, f"Работает: {get_proc()}\n {st.startTime}", reply_markup=ReplyKeyboardRemove())
+        await bot.send_message(identify, f"Работает: {get_proc()}\n{st.startTime}", reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):
