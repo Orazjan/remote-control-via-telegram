@@ -4,6 +4,14 @@ from aiogram import types
 from Handlers.funcs import loggings
 from Handlers import state_work as SG, state_command as SC, state_open as SO, state_fun as SF, call_back_klawa as CB, state_buttons as SB
 
+#####################################################
+#                                                   #
+#                                                   #
+#№№№№№№№№№№№№№ Не забыть убрать ЛОГ #################
+#                                                   #
+#                                                   #
+#####################################################
+
 loggings()
 
 HD.register_handler_client(HD.dp)
@@ -16,10 +24,3 @@ CB.register_handler_control(HD.dp)
 
 executor.start(HD.dp, HD.on_startup())
 executor.start_polling(HD.dp, skip_updates=True)
-#####################################################
-#                                                   #
-#                                                   #
-#№№№№№№№№№№№№№ Не забыть убрать ЛОГ##################
-#                                                   #
-#                                                   #
-#####################################################

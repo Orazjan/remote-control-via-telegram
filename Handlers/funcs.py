@@ -137,6 +137,9 @@ def closealt():
 def alttab():
     pag.hotkey('alt', 'tab')
 
+def alttab():
+    pag.hotkey('F5')
+    
     
 """"""
 

@@ -26,7 +26,7 @@ def get_proc():
 
 async def on_startup():
     await setup_bot_commands()
-    await bot.send_message(identify, st.return_message(f"Компьютер \n{get_proc()} \nвключён в "), reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(identify, st.return_for_start_message(f"Компьютер \n{get_proc()} \nвключён в "), reply_markup=ReplyKeyboardRemove())
 
 async def setup_bot_commands():
     bot_commands = [
@@ -48,7 +48,7 @@ async def working(message: types.message):
     if (message.from_id != identify):
         await bot.send_message(message.from_user.id, "Неправильная команда")
     else:
-        await bot.send_message(identify, st.return_message(f"Работает: {get_proc()}\n"), reply_markup=ReplyKeyboardRemove())
+        await bot.send_message(identify, st.return_for_start_message(f"Работает: {get_proc()}\n"), reply_markup=ReplyKeyboardRemove())
 
 
 async def cancel(message: types.Message):
