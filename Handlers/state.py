@@ -10,11 +10,6 @@ def return_time():
     b_t = d_t.strftime("%H:%M:%S - %d.%m")
     return b_t
 
-def return_for_start_message(text):
-    start_time = text + return_time()
-    return start_time
-
-
 def return_message(text):
     return text + return_time()
 
