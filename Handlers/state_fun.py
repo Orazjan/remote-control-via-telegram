@@ -38,6 +38,14 @@ async def fun_command(message: types.Message, state: FSMContext):
         os.remove(f'{funcs.PATH}ss.png')
         await bot.send_message(identify, return_message("Скриншот готов\n"))
         await state.finish()
+    
+    elif data['choosen'] == "Фото с камеры":
+        funcs.get_photo_from_camera()
+        photo = open(f'{funcs.PATH}cam.png', 'rb')
+        await bot.send_photo(identify, photo)
+        os.remove(f'{funcs.PATH}cam.png')
+        await bot.send_message(identify, return_message("Фото готово\n"))
+        await state.finish()
 
     elif data['choosen'] == "Вывод окна":
         await bot.send_message(identify, fs(message.text), reply_markup=keyboard_wybor)

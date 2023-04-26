@@ -5,6 +5,7 @@ import pyautogui as pag
 import screen_brightness_control as sbc
 from Handlers import state, task_proc, handlers
 from moduleforsound.sound import Sound
+import cv2
 
 PATH = os.path.abspath('./screens/')
 
@@ -107,11 +108,6 @@ def lock_screen():
 
 """Фан сегмент"""
 
-
-def write_text(text):
-    pag.typewrite(f"{text}", interval=0.25)
-
-
 def mouse_rand(func):
     pag.FAILSAFE = False
     value_for_x = rd.randint(200, 1080)   # x
@@ -123,12 +119,18 @@ def window_warning(func):
     pag.alert(func)
 
 
-def press_keyboard(text):
-    pag.hotkey(f'{text}')
-
-
 def screenshot():
     pag.screenshot(f'{PATH}ss.png')
+
+def get_photo_from_camera():
+    cap = cv2.VideoCapture(0)
+    ret, frame = cap.read()
+ 
+    # Записываем в файл
+    cv2.imwrite(f'{PATH}cam.png', frame)
+ 
+    # Отключаем камеру
+    cap.release()
 
 
 """Command segment"""
