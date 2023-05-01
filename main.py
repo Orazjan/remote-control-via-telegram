@@ -1,7 +1,7 @@
 from aiogram.utils import executor
 import Handlers.handlers as HD
 from aiogram import types
-from Funcs.funcs import loggings
+from Funcs.status_commands import status_Commands
 from Handlers import state_work as SG, state_command as SC, state_open as SO, state_fun as SF, call_back_klawa as CB, state_buttons as SB
 
 #####################################################
@@ -12,7 +12,7 @@ from Handlers import state_work as SG, state_command as SC, state_open as SO, st
 #                                                   #
 #####################################################
 
-loggings()
+status_Commands.loggings()
 
 HD.register_handler_client(HD.dp)
 SG.register_handler_state_work(HD.dp)

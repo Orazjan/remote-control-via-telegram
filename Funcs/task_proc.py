@@ -3,9 +3,6 @@ import re
 from subprocess import check_output
 
 def get_processes_running():
-    """
-    Takes tasklist output and parses the table into a dict
-    """
     tasks = check_output(['tasklist']).decode('cp866', 'ignore').split("\r\n")
     p = []
     for task in tasks:

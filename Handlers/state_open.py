@@ -1,9 +1,9 @@
-from Funcs import opens
+from Funcs import opens_commands
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from Handlers.handlers import bot, dp, identify
 from Keyboardz.keyboard_open_web import keyboard_open
-from Funcs.open_funcs import open_web as ow
+from message_processing.open_messages import open_web as ow
 from Funcs.state import return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup

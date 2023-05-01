@@ -5,8 +5,9 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from Handlers.handlers import bot, dp, identify
 from Keyboardz.keyboards_status import keybord_status
-from Funcs.state import return_message, status_komp as ps
-from Funcs import funcs
+from Funcs.state import return_message
+from message_processing import status_messages as sc
+from Funcs import status_commands as sac
 
 storage = MemoryStorage()
 
@@ -31,29 +32,29 @@ async def process_command(message: types.Message, state: FSMContext):
 
     if data['commandforstatus'] == "Закрыть программу":
         await StateComand.next()
-        await bot.send_message(identify, ps(data['commandforstatus']))
+        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
         await StateComand.taskname.set()
 
     elif data['commandforstatus'] == "Яркость":
         await StateComand.next()
-        await bot.send_message(identify, ps(data['commandforstatus']))
+        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
         await StateComand.taskname.set()
 
     elif data['commandforstatus'] == "Звук":
         await StateComand.next()
-        await bot.send_message(identify, ps(data['commandforstatus']))
+        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
         await StateComand.taskname.set()
 
     elif data['commandforstatus'] == "Логи":
         hren = data['commandforstatus']
         doc = open(f'{funcs.PATH}logfile.log', 'rb')
         await bot.send_document(identify, doc)
-        await bot.send_message(identify, ps(hren))
+        await bot.send_message(identify, sc.status_message.status_komp(hren))
         await state.finish()
 
     else:
         hren = data['commandforstatus']
-        await bot.send_message(identify, ps(hren))
+        await bot.send_message(identify, sc.status_message.status_komp(hren))
         await state.finish()
 
 @dp.message_handler(state=StateComand.taskname)
@@ -63,17 +64,17 @@ async def procces_task(message: types.Message, state: FSMContext):
         data['taskname'] = message.text
 
     if data['commandforstatus'] == "Закрыть программу":
-        funcs.kill_process(data['taskname'])
+        sac.status_Commands.kill_process(data['taskname'])
         await bot.send_message(identify, return_message(f"Удалено {data['taskname']}\n"))
         await state.finish()
 
     elif data['commandforstatus'] == "Яркость":
-        funcs.bright_monitor(data['taskname'])
+        sac.status_Commands.bright_monitor(data['taskname'])
         await bot.send_message(identify, return_message(f"Яркость установлена на {data['taskname']}%\n"))
         await state.finish()
 
     elif data['commandforstatus'] == "Звук":
-        funcs.volume(data['taskname'])
+        sac.status_Commands.volume(data['taskname'])
         await bot.send_message(identify, return_message(f"Звук установлен на {data['taskname']}%\n"))
         await state.finish()
 

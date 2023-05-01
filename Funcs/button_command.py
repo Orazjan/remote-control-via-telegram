@@ -6,6 +6,6 @@ class commands:
     def alttab():
         pag.hotkey('alt', 'tab')
 
-    def alttab():
+    def F5():
         pag.hotkey('F5')
     

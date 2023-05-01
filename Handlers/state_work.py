@@ -2,7 +2,8 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove
-from Funcs.state import work_komp as ps, perezagruzka
+from message_processing import work_messages as ps
+
 from Handlers.handlers import bot, dp, identify
 from Keyboardz import keybords_komp
 import pyautogui as pag
@@ -27,16 +28,17 @@ async def process_name(message: types.Message, state: FSMContext):
 
     if data['comandname'] == 'Покинуть систему':
         hren = data['comandname']
-        await bot.send_message(identify, ps(hren))
+        await bot.send_message(identify, ps.work_message.work_komp(hren))
         await state.finish()
     elif data['comandname'] == 'Заблокировать экран':
         hren = data['comandname']
-        await bot.send_message(identify, ps(hren))
+        await bot.send_message(identify, ps.work_message.work_komp(hren))
         await state.finish()
+        
     else:
         hren = data['comandname']
         await work_comands.next()
-        await bot.send_message(identify, ps(hren))
+        await bot.send_message(identify, ps.work_message.work_komp(hren))
         await work_comands.set_secconds.set()
 
     ReplyKeyboardRemove.remove_keyboard = True
@@ -45,7 +47,7 @@ async def process_name(message: types.Message, state: FSMContext):
 async def set_seconds(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['set_seccond'] = message.text
-    await bot.send_message(identify, perezagruzka(data['comandname'], data['set_seccond']))
+    await bot.send_message(identify, ps.work_message.perezagruzka(data['comandname'], data['set_seccond']))
     await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
 
