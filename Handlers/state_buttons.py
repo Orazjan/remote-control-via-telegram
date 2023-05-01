@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from Keyboardz.keyboards_commands import keyboard_commands
-from Handlers import funcs
+from Funcs import command_funcs
 
 storage = MemoryStorage()
 
@@ -30,17 +30,17 @@ async def process_command(message: types.Message, state: FSMContext):
 
     if message.text == "ALT F4":
         await bot.send_message(identify, "ALT F4")
-        funcs.closealt()
+        command_funcs.commands.closealt()
         await state.finish()
 
     elif message.text == "ALT TAB":
         await bot.send_message(identify, "ALT TAB")
-        funcs.alttab()
+        command_funcs.commands.alttab()
         await state.finish()
         
     elif message.text == "F5":
         await bot.send_message(identify, "F5")
-        funcs.alttab()
+        command_funcs.commands.alttab()
         await state.finish()
         
     else:

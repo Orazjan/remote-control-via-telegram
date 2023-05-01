@@ -3,8 +3,8 @@ from aiogram import types, Dispatcher, Bot
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from environs import Env
-import Handlers.state as st
-import Handlers.funcs as fun
+import Funcs.state as st
+import Funcs.funcs as fun
 
 env = Env()
 env.read_env()

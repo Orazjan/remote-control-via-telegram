@@ -5,8 +5,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from Handlers.handlers import bot, dp, identify
 from Keyboardz.keyboards_status import keybord_status
-from Handlers.state import return_message, status_komp as ps
-from Handlers import funcs
+from Funcs.state import return_message, status_komp as ps
+from Funcs import funcs
 
 storage = MemoryStorage()
 

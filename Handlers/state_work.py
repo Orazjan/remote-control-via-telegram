@@ -2,7 +2,7 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove
-from Handlers.state import work_komp as ps, perezagruzka
+from Funcs.state import work_komp as ps, perezagruzka
 from Handlers.handlers import bot, dp, identify
 from Keyboardz import keybords_komp
 import pyautogui as pag
@@ -26,6 +26,10 @@ async def process_name(message: types.Message, state: FSMContext):
         data['comandname'] = message.text
 
     if data['comandname'] == 'Покинуть систему':
+        hren = data['comandname']
+        await bot.send_message(identify, ps(hren))
+        await state.finish()
+    elif data['comandname'] == 'Заблокировать экран':
         hren = data['comandname']
         await bot.send_message(identify, ps(hren))
         await state.finish()

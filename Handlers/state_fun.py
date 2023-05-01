@@ -5,9 +5,9 @@ from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from Handlers.handlers import bot, dp, identify
-from Handlers import funcs
+from Funcs import funcs
 from Keyboardz.keyboard_fun import *
-from Handlers.state import fun_segment as fs, return_message
+from Funcs.state import fun_segment as fs, return_message
 
 storage = MemoryStorage()
 

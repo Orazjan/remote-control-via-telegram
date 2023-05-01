@@ -1,9 +1,10 @@
-from Handlers import opens
+from Funcs import opens
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from Handlers.handlers import bot, dp, identify
 from Keyboardz.keyboard_open_web import keyboard_open
-from Handlers.state import open_web as ow, return_message
+from Funcs.open_funcs import open_web as ow
+from Funcs.state import return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
@@ -44,7 +45,7 @@ async def procces_task(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['urlname'] = message.text
 
-    opens.open_web(data['urlname'])    
+    opens.openingUrl.open_web((data['urlname']))
     await bot.send_message(identify, return_message(f"Ссылка открыта \n"))
     await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
