@@ -2,6 +2,8 @@ import pyautogui as pag
 import cv2
 from Funcs import funcs
 import random as rd
+from ctypes import *
+
 
 class Fun_funcs:
     
@@ -13,6 +15,10 @@ class Fun_funcs:
 
     def window_warning(func):
         pag.alert(func)
+
+    def blockUnblockKeyMouse(truefalse):
+        while truefalse:
+            windll.user32.BlockInput(truefalse)
 
     def screenshot():
         pag.screenshot(f'{funcs.PATH}ss.png')

