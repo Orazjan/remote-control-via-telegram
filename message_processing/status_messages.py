@@ -4,6 +4,7 @@ from Funcs import funcs
 from Funcs.state import return_message
 from Funcs import status_commands as sc
 
+
 class status_message:
 
     def status_komp(func):
@@ -11,14 +12,16 @@ class status_message:
             battery = psutil.sensors_battery()
             percent = int(battery.percent)
             if (battery.power_plugged == True):
-                text = "Заряд батареи: " + str(percent) + "\nЗаряжается "
+                text = "Заряд батареи: " + \
+                    str(percent) + "\nЗаряжается "
             else:
-                text = "Заряд батареи: " + str(percent) + "\nНе заряжается "
+                text = "Заряд батареи: " + \
+                    str(percent) + "\nНе заряжается "
             return return_message(text)
 
         elif (func == 'Открытые программы'):
             lstp = get_processes_running()
-            array =[]
+            array = []
             for p in lstp:
                 array.append(p+"\n")
             func = f"Открытые программы\n\n{list_to_string(array)}\n\n"

@@ -11,9 +11,11 @@ from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
 
 storage = MemoryStorage()
 
+
 class opencomand(StatesGroup):
     commamnd = State()
     urlname = State()
+
 
 async def menu_web(message: types.Message):
     if (message.from_id != identify):
@@ -21,6 +23,7 @@ async def menu_web(message: types.Message):
     else:
         await opencomand.commamnd.set()
         await bot.send_message(identify, "Открытие сайта. Выберите сайт:\n", reply_markup=keyboard_open)
+
 
 @dp.message_handler(state=opencomand.commamnd)
 async def process_command(message: types.Message, state: FSMContext):
@@ -39,6 +42,7 @@ async def process_command(message: types.Message, state: FSMContext):
 
     ReplyKeyboardRemove.remove_keyboard = True
 
+
 @dp.message_handler(state=opencomand.urlname)
 async def procces_task(message: types.Message, state: FSMContext):
 
@@ -50,6 +54,6 @@ async def procces_task(message: types.Message, state: FSMContext):
     await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
 
+
 def register_handler_state_open(dp: Dispatcher):
     dp.register_message_handler(menu_web, commands=['openweb'])
-    

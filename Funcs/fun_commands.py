@@ -6,7 +6,7 @@ from ctypes import *
 
 
 class Fun_funcs:
-    
+
     def mouse_rand(func):
         pag.FAILSAFE = False
         value_for_x = rd.randint(200, 1080)   # x
@@ -28,7 +28,7 @@ class Fun_funcs:
         for i in range(40):
             cap.read()
         ret, frame = cap.read()
-    
+
         cv2.imwrite(f'{funcs.PATH}cam.png', frame)
 
         cap.release()

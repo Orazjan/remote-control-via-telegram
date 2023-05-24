@@ -37,12 +37,12 @@ async def process_command(message: types.Message, state: FSMContext):
         await bot.send_message(identify, "ALT TAB")
         command_funcs.commands.alttab()
         await state.finish()
-        
+
     elif message.text == "F5":
         await bot.send_message(identify, "F5")
         command_funcs.commands.F5()
         await state.finish()
-        
+
     else:
         await bot.send_message(identify, "Неправильная команда")
         await state.finish()

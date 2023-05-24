@@ -1,4 +1,6 @@
 import pyautogui as pag
+
+
 class commands:
     def closealt():
         pag.hotkey('alt', 'f4')
@@ -8,4 +10,3 @@ class commands:
 
     def F5():
         pag.hotkey('F5')
-    

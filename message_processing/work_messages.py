@@ -2,6 +2,7 @@ from Funcs import work_command
 from Funcs import funcs
 from Funcs.state import return_message
 
+
 class work_message:
     def work_komp(func):
         if func == "Покинуть систему":
@@ -24,7 +25,7 @@ class work_message:
         if text == 'Перезагрузка':
             work_command.work_commands.reboot(seconds)
             return return_message(f"Компьютер будет перезагружен через {seconds} секунд\n")
-    
+
         elif text == 'Завершение работы':
             work_command.work_commands.shutdown(seconds)
             return return_message(f"Компьютер будет выключен через {seconds} секунд\n")

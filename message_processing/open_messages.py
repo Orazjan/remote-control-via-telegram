@@ -1,6 +1,7 @@
 import Funcs.opens_commands as op
 from Funcs.state import return_message
 
+
 def open_web(func):
     if (func == "Vk"):
         func = "Открывается ВК "

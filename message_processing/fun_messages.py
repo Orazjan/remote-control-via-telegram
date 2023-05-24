@@ -1,13 +1,14 @@
 from Funcs.state import return_message
 
+
 class Funs_messages:
     def fun_segment(func):
         if (func == "Напечатать"):
-            func ='Введите текст на англ\n'
+            func = 'Введите текст на англ\n'
             return return_message(func)
 
-        elif (func=="Рандом с мышкой"):
-            func ='Введите количество секунд:\n'
+        elif (func == "Рандом с мышкой"):
+            func = 'Введите количество секунд:\n'
             return return_message(f"{func}")
 
         elif (func == "Вывод окна"):

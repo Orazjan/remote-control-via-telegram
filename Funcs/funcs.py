@@ -4,11 +4,14 @@ from Handlers import handlers
 
 PATH = os.path.abspath('./screens/')
 
+
 def cancel():
     os.system("shutdown -a")
 
+
 def kill_func():
     os.system("taskkill /f /im python.exe")
+
 
 def help():
     text = "Start - включение /проверка работает или нет\n"

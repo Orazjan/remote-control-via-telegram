@@ -11,9 +11,11 @@ from Funcs import status_commands as sac
 
 storage = MemoryStorage()
 
+
 class StateComand(StatesGroup):
     commandforstatus = State()
     taskname = State()
+
 
 async def menustatus(message: types.Message):
     if (message.from_id != identify):
@@ -21,6 +23,7 @@ async def menustatus(message: types.Message):
     else:
         await StateComand.commandforstatus.set()
         await bot.send_message(identify, "Работа со статусом компьютера. Выберите действие", reply_markup=keybord_status)
+
 
 @dp.message_handler(state=StateComand.commandforstatus)
 async def process_command(message: types.Message, state: FSMContext):
@@ -57,6 +60,7 @@ async def process_command(message: types.Message, state: FSMContext):
         await bot.send_message(identify, sc.status_message.status_komp(hren))
         await state.finish()
 
+
 @dp.message_handler(state=StateComand.taskname)
 async def procces_task(message: types.Message, state: FSMContext):
 
@@ -79,6 +83,7 @@ async def procces_task(message: types.Message, state: FSMContext):
         await state.finish()
 
     ReplyKeyboardRemove.remove_keyboard = True
+
 
 def register_handler_state_command(dp: Dispatcher):
     dp.register_message_handler(menustatus, commands=['status'])
