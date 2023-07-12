@@ -82,7 +82,7 @@ async def procces_task(message: types.Message, state: FSMContext):
         await bot.send_message(identify, return_message(f"Звук установлен на {data['taskname']}%\n"))
         await state.finish()
 
-    ReplyKeyboardRemove.remove_keyboard = True
+    reply_markup = types.ReplyKeyboardRemove()
 
 
 def register_handler_state_command(dp: Dispatcher):

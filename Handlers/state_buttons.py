@@ -47,6 +47,7 @@ async def process_command(message: types.Message, state: FSMContext):
         await bot.send_message(identify, "Неправильная команда")
         await state.finish()
 
+    await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
 
 
