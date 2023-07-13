@@ -1,7 +1,7 @@
 import pyautogui as pag
 
 
-class commands:
+class buttons_commands:
     def closealt():
         pag.hotkey('alt', 'f4')
 

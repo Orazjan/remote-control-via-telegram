@@ -6,6 +6,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from Keyboardz.keyboards_commands import keyboard_commands
 from Funcs import button_command
+from message_processing import button_messages as bm
 
 storage = MemoryStorage()
 
@@ -28,24 +29,8 @@ async def process_command(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['comandn'] = message.text
 
-    if message.text == "ALT F4":
-        await bot.send_message(identify, "ALT F4")
-        command_funcs.commands.closealt()
-        await state.finish()
-
-    elif message.text == "ALT TAB":
-        await bot.send_message(identify, "ALT TAB")
-        command_funcs.commands.alttab()
-        await state.finish()
-
-    elif message.text == "F5":
-        await bot.send_message(identify, "F5")
-        command_funcs.commands.F5()
-        await state.finish()
-
-    else:
-        await bot.send_message(identify, "Неправильная команда")
-        await state.finish()
+    await bot.send_message(identify, bm.button_messages.button_segment(data['comandn']))
+    await state.finish()
 
     await state.finish()
     ReplyKeyboardRemove.remove_keyboard = True
