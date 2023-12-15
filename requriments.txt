@@ -2,7 +2,7 @@ Python 3.10.0
 aiogram==2.18
 aiogram-dialog==1.2.1
 
-aiogram                   2.22.2   
+aiogram                   2.23
 aiohttp                   3.8.3    
 aiosignal                 1.2.0    
 async-timeout             4.0.2    
