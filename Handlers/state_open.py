@@ -4,11 +4,11 @@ from aiogram.dispatcher import FSMContext
 from Handlers.handlers import bot, dp, identify
 from Keyboardz.keyboard_open_web import keyboard_open
 from message_processing.open_messages import open_web as ow
-from Funcs.state import return_message, opens_commands
+from Funcs.state import return_message
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
-
+from Funcs import opens_commands
 
 storage = MemoryStorage()
 
