@@ -1,5 +1,4 @@
 from Funcs.state import return_message
-# Импортируем обновленный класс (убедись, что в button_command.py класс называется ButtonCommands)
 from Funcs.button_command import ButtonCommands
 
 
@@ -12,7 +11,6 @@ class ButtonMessages:
         Возвращает текст ответа для пользователя.
         """
         if command_text == "ALT F4":
-            # Вызываем асинхронный метод
             await ButtonCommands.close_alt()
             return return_message('Вы нажали на ALT F4\n')
 

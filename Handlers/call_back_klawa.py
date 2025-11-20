@@ -8,28 +8,22 @@ from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from environs import Env
 
-# 1. Настройка переменных
 env = Env()
 env.read_env()
 ADMIN_ID = env.int('id')
 
 router = Router()
 
-# 2. Новая система CallbackData (в стиле V3)
-# Мы создаем класс, описывающий данные кнопки
-
 
 class VoteCallback(CallbackData, prefix="vote"):
     action: str
     amount: int
 
-# 3. Создание клавиатуры через Builder (современный способ)
-
 
 def get_keyboard(amount: int):
     builder = InlineKeyboardBuilder()
 
-    # Добавляем кнопки. Обрати внимание на создание callback_data
+    # Добавляем кнопки.
     builder.button(text='⬆️ Up', callback_data=VoteCallback(
         action='up', amount=amount))
     builder.button(text='⬅️ Left', callback_data=VoteCallback(
@@ -40,16 +34,13 @@ def get_keyboard(amount: int):
         action='down', amount=amount))
     builder.button(text='⏯ Play/Pause',
                    callback_data=VoteCallback(action='pause', amount=amount))
-    builder.button(text='❌ End', callback_data=VoteCallback(
+    builder.button(text='End', callback_data=VoteCallback(
         action='end', amount=amount))
 
-    # Настраиваем сетку кнопок (например, 1 сверху, 2 посередине, 1 снизу...)
-    # Здесь сделаем по 2 кнопки в ряд, а последнюю (End) отдельно
+    # Настраиваем сетку кнопок
     builder.adjust(1, 2, 1, 1, 1)
 
     return builder.as_markup()
-
-# --- Хендлеры ---
 
 
 @router.message(Command("control"), F.from_user.id == ADMIN_ID)
@@ -60,14 +51,11 @@ async def cmd_control(message: types.Message):
     )
 
 # Обработка нажатий кнопок
-# Мы фильтруем по нашему классу VoteCallback и сразу распаковываем callback_data
 
 
 @router.callback_query(VoteCallback.filter(F.action == 'up'))
 async def vote_up_cb(call: types.CallbackQuery):
-    # Используем to_thread, чтобы pyautogui не блокировал бота
     await asyncio.to_thread(pag.press, 'up')
-    # Обязательно отвечать на колбэк, чтобы убрались "часики" на кнопке
     await call.answer()
 
 
@@ -98,7 +86,6 @@ async def vote_pause_cb(call: types.CallbackQuery):
 @router.callback_query(VoteCallback.filter(F.action == 'end'))
 async def vote_end_cb(call: types.CallbackQuery, state: FSMContext):
     await call.message.answer("Управление завершено.")
-    # Удаляем сообщение с кнопками, чтобы не спамить
     await call.message.delete()
     # Очищаем состояние (аналог storage.finish())
     await state.clear()

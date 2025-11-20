@@ -26,11 +26,11 @@ class BrowserCommands:
         await asyncio.to_thread(webbrowser.open_new, url)
 
     @staticmethod
-    async def close_tab():  # Бывшая kill_wind
+    async def close_tab():
         """Закрывает текущую вкладку (Ctrl + W)"""
         await asyncio.to_thread(pag.hotkey, 'ctrl', 'w')
 
     @staticmethod
-    async def restore_tab():  # Бывшая open_last_wind
+    async def restore_tab():
         """Восстанавливает закрытую вкладку (Ctrl + Shift + T)"""
         await asyncio.to_thread(pag.hotkey, 'ctrl', 'shift', 't')

@@ -1,6 +1,5 @@
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-# Создаем билдер
 builder = ReplyKeyboardBuilder()
 
 # Добавляем кнопки по порядку
@@ -11,8 +10,7 @@ builder.button(text="Открытые программы")
 builder.button(text="Закрыть программу")
 builder.button(text="Логи")
 
-# Настраиваем сетку:
-# 2 в первом ряду, 3 во втором, 1 в третьем
+# Настраиваем сетку
 builder.adjust(2, 3, 1)
 
 # Создаем клавиатуру

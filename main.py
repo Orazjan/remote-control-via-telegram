@@ -5,10 +5,8 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.fsm.storage.memory import MemoryStorage
 from environs import Env
 
-# Импортируем вспомогательные функции
 import Funcs.state as st
-from Funcs.status_commands import StatusCommands  # Для настройки логгера
-# 1. Импортируем все наши модули с роутерами
+from Funcs.status_commands import StatusCommands
 from Handlers import (call_back_klawa, handlers, state_buttons, state_command,
                       state_fun, state_open, state_work)
 
@@ -16,7 +14,6 @@ from Handlers import (call_back_klawa, handlers, state_buttons, state_command,
 env = Env()
 env.read_env()
 
-# Проверь, чтобы имена переменных в .env совпадали с этими:
 BOT_TOKEN = env.str('Api_Token')
 ADMIN_ID = env.int('id')
 
@@ -34,8 +31,7 @@ async def setup_bot_commands(bot: Bot):
         types.BotCommand(command="/control", description="Управление"),
         types.BotCommand(command="/kill", description="Отключить программу"),
         types.BotCommand(command="/cancel", description="Отмена выключения")
-        # /funfun в меню можно не добавлять, если не хочешь, или добавь:
-        # types.BotCommand(command="/funfun", description="Развлечения")
+
     ]
     await bot.set_my_commands(bot_commands)
 
@@ -77,8 +73,7 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher(storage=MemoryStorage())
 
-    # 3. Регистрация роутеров
-    # Порядок важен, но так как у нас везде фильтры по командам, конфликтов не будет
+    # Регистрируем роутеры
     dp.include_routers(
         handlers.router,         # Основные команды (/start, /help)
         state_work.router,       # /rabota
@@ -88,8 +83,7 @@ async def main():
         state_fun.router,        # /funfun
         call_back_klawa.router   # /control (инлайн кнопки)
     )
-
-    # Удаляем вебхуки (аналог skip_updates=True)
+    # Удаляем вебхук и сбрасываем апдейты (на всякий случай)
     await bot.delete_webhook(drop_pending_updates=True)
 
     # Запускаем логику старта (уведомление)

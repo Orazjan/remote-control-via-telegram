@@ -1,8 +1,8 @@
 import psutil
-from Funcs.task_proc import get_processes_running, list_to_string
+
 from Funcs.state import return_message
-# Импортируем обновленный класс StatusCommands
 from Funcs.status_commands import StatusCommands
+from Funcs.task_proc import get_processes_running, list_to_string
 
 
 class StatusMessage:
@@ -36,7 +36,7 @@ class StatusMessage:
                 lstp = lstp[:50]
                 lstp.append("... (список обрезан)")
 
-            # Используем list_to_string (или просто join)
+            # Используем list_to_string для форматирования списка
             # Добавляем перенос строки к каждому элементу
             formatted_list = [f"{p}\n" for p in lstp]
             programs_text = list_to_string(formatted_list)
@@ -47,16 +47,13 @@ class StatusMessage:
             return return_message("Введите название программы для закрытия (например, chrome.exe):")
 
         elif func == "Логи":
-            # Мы теперь отправляем файл в хендлере, тут просто пишем текст
             return return_message("Файл логов формируется и отправляется...")
 
         elif func == "Яркость":
-            # Получаем яркость асинхронно
             brightness_info = await StatusCommands.get_brightness()
             return return_message(f"{brightness_info}\nУкажите новый уровень яркости (0-100):\n")
 
         elif func == 'Звук':
-            # Получаем звук асинхронно
             volume_level = await StatusCommands.get_sound_volume()
             return f"Уровень звука: {volume_level}\nВведите уровень звука, который нужно установить (или Max/Mute):"
 

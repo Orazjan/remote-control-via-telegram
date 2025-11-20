@@ -28,7 +28,6 @@ async def cmd_start_buttons(message: types.Message, state: FSMContext):
 async def process_command_state(message: types.Message, state: FSMContext):
     command_text = message.text
 
-    # ВАЖНО: Добавили await, так как нажатие кнопок теперь асинхронное
     response_text = await bm.ButtonMessages.button_segment(command_text)
 
     await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())

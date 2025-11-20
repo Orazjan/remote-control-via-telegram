@@ -1,12 +1,13 @@
+import logging
+import os
 import random as rd
 import threading
 import time
-import logging
-import os
+
 import cv2
 import pyautogui as pag
 
-# Импортируем путь из твоего конфига
+# Импортируем путьы из funcs
 from Funcs import funcs
 
 # Настраиваем логгер для этого файла
@@ -22,9 +23,6 @@ class FunFuncs:
     def mouse_rand(duration):
         """
         Двигает мышь в случайную точку.
-        ВНИМАНИЕ: Эта функция блокирует поток на время duration.
-        В хендлере её лучше вызывать через asyncio.to_thread, 
-        либо ставить duration=0.
         """
         pag.FAILSAFE = False
         screen_width, screen_height = pag.size()
@@ -46,7 +44,7 @@ class FunFuncs:
         def show_alert():
             pag.alert(text=message, title="Warning from Bot")
 
-        # Запускаем алерт параллельно, "выстрелил и забыл"
+        # Запускаем алерт параллельно
         threading.Thread(target=show_alert, daemon=True).start()
 
     @staticmethod
@@ -100,7 +98,6 @@ class FunFuncs:
                 return
 
             # Прогрев камеры (баланс белого, экспозиция)
-            # 15 кадров может быть долго, сократим до 5-10 для скорости
             for _ in range(10):
                 cap.read()
 

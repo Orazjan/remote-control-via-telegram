@@ -20,8 +20,6 @@ async def get_processes_running():
         p = []
 
         # Регулярка для строки (не байт).
-        # Ищет: (Имя) (PID) ...
-        # Имя может содержать пробелы, поэтому используем .*?
         pattern = re.compile(r'(.*?)\s+(\d+)\s+(\w+)\s+(\w+)\s+(.*?)\s.*')
 
         for task in tasks:
@@ -31,7 +29,6 @@ async def get_processes_running():
 
             m = pattern.match(task)
             if m:
-                # m.group(1) - это имя процесса
                 p.append(m.group(1))
 
         return p
@@ -45,7 +42,4 @@ def list_to_string(text_list):
     Преобразует список строк в одну большую строку.
     В Python это делается через join.
     """
-    # Если text_list это просто список имен, лучше добавить разделитель,
-    # например запятую или новую строку, чтобы не слиплось.
-    # Но если у тебя элементы уже содержат \n, то просто "".join
     return "".join(text_list)

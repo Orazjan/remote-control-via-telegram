@@ -1,15 +1,15 @@
-from aiogram import Router, types, F
+from aiogram import F, Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile
 from environs import Env
 
-from Keyboardz.keyboards_status import keybord_status
-from Funcs.state import return_message
-from message_processing import status_messages as sc
-from Funcs import status_commands as sac
 import Funcs.funcs as funcs
+from Funcs import status_commands as sac
+from Funcs.state import return_message
+from Keyboardz.keyboards_status import keybord_status
+from message_processing import status_messages as sc
 
 env = Env()
 env.read_env()
@@ -38,7 +38,6 @@ async def process_command_choice(message: types.Message, state: FSMContext):
 
     if command_text in commands_requiring_args:
         await state.set_state(StatusStates.waiting_for_argument)
-        # ВАЖНО: await
         response_text = await sc.StatusMessage.status_komp(command_text)
         await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
 
@@ -54,7 +53,6 @@ async def process_command_choice(message: types.Message, state: FSMContext):
         await state.clear()
 
     else:
-        # ВАЖНО: await
         response_text = await sc.StatusMessage.status_komp(command_text)
         await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
         await state.clear()
@@ -67,17 +65,15 @@ async def process_task_argument(message: types.Message, state: FSMContext):
     command_name = data.get('commandforstatus')
 
     if command_name == "Закрыть программу":
-        # await + CamelCase
         await sac.StatusCommands.kill_process(task_argument)
         await message.answer(return_message(f"Удалено: {task_argument}"))
 
     elif command_name == "Яркость":
-        # await + CamelCase
         await sac.StatusCommands.bright_monitor(task_argument)
         await message.answer(return_message(f"Яркость: {task_argument}%"))
 
     elif command_name == "Звук":
-        await sac.StatusCommands.volume(task_argument)  # await + CamelCase
+        await sac.StatusCommands.volume(task_argument)
         await message.answer(return_message(f"Звук: {task_argument}"))
 
     await state.clear()

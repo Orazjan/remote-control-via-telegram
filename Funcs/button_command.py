@@ -23,5 +23,4 @@ class ButtonCommands:
     @staticmethod
     async def press_f5():
         """Обновляет страницу (F5)"""
-        # Для одной клавиши лучше использовать press, а не hotkey
         await asyncio.to_thread(pag.press, 'f5')

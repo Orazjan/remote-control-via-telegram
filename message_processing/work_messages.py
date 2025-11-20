@@ -1,6 +1,5 @@
-# Импортируем обновленный класс из Funcs
-from Funcs.work_command import WorkCommands
 from Funcs.state import return_message
+from Funcs.work_command import WorkCommands
 
 
 class WorkMessages:
@@ -13,7 +12,6 @@ class WorkMessages:
         """
 
         if func == "Покинуть систему":
-            # Выполняем асинхронно
             await WorkCommands.leave_session()
             return return_message("Вы покинете систему через несколько секунд ")
 
@@ -22,7 +20,6 @@ class WorkMessages:
             return return_message('Компьютер заблокирован ')
 
         elif func == 'Перезагрузка' or func == 'Завершение работы':
-            # Действие выполнится на следующем шаге (после ввода секунд)
             return return_message('Введите количество секунд: \n')
 
         else:

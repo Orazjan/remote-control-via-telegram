@@ -20,7 +20,6 @@ class FunMessages:
             return return_message("На данный момент данная функция не доступна, но мы работаем над ней")
 
         elif action == "Нажать на кнопку":
-            # Исправил: добавил return_message для единообразия
             return return_message("Введите кнопку, которую нужно нажать:")
 
         else:

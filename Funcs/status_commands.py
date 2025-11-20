@@ -1,11 +1,11 @@
+import asyncio
 import logging
 import os
 import platform
-import asyncio
+
 import screen_brightness_control as sbc
 
-# Пытаемся импортировать модуль звука.
-# Если его нет или он работает с ошибками, бот не упадет при запуске.
+# Пытаемся импортировать модуль звука. Если не установлен, логируем предупреждение.
 try:
     from moduleforsound.sound import Sound
 except ImportError:
@@ -13,10 +13,7 @@ except ImportError:
         "Модуль moduleforsound не найден. Управление звуком будет недоступно.")
     Sound = None
 
-from Funcs import state
-from Funcs import funcs
-# Убрали импорт task_proc, если он использовался только для логов (которые мы теперь шлем файлом)
-# from Funcs import task_proc
+from Funcs import funcs, state
 
 # Получаем логгер
 logger = logging.getLogger(__name__)
@@ -35,7 +32,7 @@ class StatusCommands:
         file_handler = logging.FileHandler(
             log_path, mode="w", encoding='utf-8')
         file_handler.setFormatter(file_formatter)
-        file_handler.setLevel(logging.INFO)  # или ERROR, как тебе удобнее
+        file_handler.setLevel(logging.ERROR)  # или ERROR, как тебе удобнее
 
         # Добавляем обработчик к корневому логгеру
         root_logger = logging.getLogger()
@@ -86,7 +83,6 @@ class StatusCommands:
     @staticmethod
     async def get_sound_volume():
         if Sound:
-            # Если библиотека синхронная, лучше обернуть
             vol = await asyncio.to_thread(Sound.current_volume)
             return vol
         return "Модуль звука отключен"
