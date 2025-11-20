@@ -1,73 +1,105 @@
 import asyncio
-from aiogram import types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from aiogram.utils.callback_data import CallbackData
-from aiogram.utils.exceptions import MessageNotModified
+
 import pyautogui as pag
-from Handlers.handlers import bot, dp, Dispatcher, identify
+from aiogram import F, Router, types
+from aiogram.filters import Command
+from aiogram.filters.callback_data import CallbackData
+from aiogram.fsm.context import FSMContext
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from environs import Env
 
-loop = asyncio.get_event_loop()
-storage = MemoryStorage()
-dp.middleware.setup(LoggingMiddleware())
+# 1. Настройка переменных
+env = Env()
+env.read_env()
+ADMIN_ID = env.int('id')
 
-vote_cb = CallbackData('vote', 'action', 'amount')  # post:<action>:<amount>
+router = Router()
 
-
-def get_keyboard(amount):
-    return types.InlineKeyboardMarkup().add(
-        types.InlineKeyboardButton('up', callback_data=vote_cb.new(action='up', amount=amount))).add(
-        types.InlineKeyboardButton(
-            'left', callback_data=vote_cb.new(action='left', amount=amount)),
-        types.InlineKeyboardButton('right', callback_data=vote_cb.new(action='right', amount=amount))).add(
-        types.InlineKeyboardButton('down', callback_data=vote_cb.new(action='down', amount=amount))).add(
-        types.InlineKeyboardButton('play\pause', callback_data=vote_cb.new(action='pause', amount=amount))).add(
-        types.InlineKeyboardButton('end', callback_data=vote_cb.new(action='end', amount=amount)))
+# 2. Новая система CallbackData (в стиле V3)
+# Мы создаем класс, описывающий данные кнопки
 
 
+class VoteCallback(CallbackData, prefix="vote"):
+    action: str
+    amount: int
+
+# 3. Создание клавиатуры через Builder (современный способ)
+
+
+def get_keyboard(amount: int):
+    builder = InlineKeyboardBuilder()
+
+    # Добавляем кнопки. Обрати внимание на создание callback_data
+    builder.button(text='⬆️ Up', callback_data=VoteCallback(
+        action='up', amount=amount))
+    builder.button(text='⬅️ Left', callback_data=VoteCallback(
+        action='left', amount=amount))
+    builder.button(text='➡️ Right', callback_data=VoteCallback(
+        action='right', amount=amount))
+    builder.button(text='⬇️ Down', callback_data=VoteCallback(
+        action='down', amount=amount))
+    builder.button(text='⏯ Play/Pause',
+                   callback_data=VoteCallback(action='pause', amount=amount))
+    builder.button(text='❌ End', callback_data=VoteCallback(
+        action='end', amount=amount))
+
+    # Настраиваем сетку кнопок (например, 1 сверху, 2 посередине, 1 снизу...)
+    # Здесь сделаем по 2 кнопки в ряд, а последнюю (End) отдельно
+    builder.adjust(1, 2, 1, 1, 1)
+
+    return builder.as_markup()
+
+# --- Хендлеры ---
+
+
+@router.message(Command("control"), F.from_user.id == ADMIN_ID)
 async def cmd_control(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await bot.send_message(identify, 'Выбирайте действие: ', reply_markup=get_keyboard(0))
+    await message.answer(
+        'Панель управления:',
+        reply_markup=get_keyboard(amount=0)
+    )
+
+# Обработка нажатий кнопок
+# Мы фильтруем по нашему классу VoteCallback и сразу распаковываем callback_data
 
 
-@dp.callback_query_handler(vote_cb.filter(action='up'))
-async def vote_up_cb_handler(call: types.CallbackQuery):
-    pag.press('up')
+@router.callback_query(VoteCallback.filter(F.action == 'up'))
+async def vote_up_cb(call: types.CallbackQuery):
+    # Используем to_thread, чтобы pyautogui не блокировал бота
+    await asyncio.to_thread(pag.press, 'up')
+    # Обязательно отвечать на колбэк, чтобы убрались "часики" на кнопке
+    await call.answer()
 
 
-@dp.callback_query_handler(vote_cb.filter(action='down'))
-async def vote_down_cb_handler(call: types.CallbackQuery):
-    pag.press('down')
+@router.callback_query(VoteCallback.filter(F.action == 'down'))
+async def vote_down_cb(call: types.CallbackQuery):
+    await asyncio.to_thread(pag.press, 'down')
+    await call.answer()
 
 
-@dp.callback_query_handler(vote_cb.filter(action='left'))
-async def vote_down_cb_handler(call: types.CallbackQuery):
-    pag.press('left')
+@router.callback_query(VoteCallback.filter(F.action == 'left'))
+async def vote_left_cb(call: types.CallbackQuery):
+    await asyncio.to_thread(pag.press, 'left')
+    await call.answer()
 
 
-@dp.callback_query_handler(vote_cb.filter(action='right'))
-async def vote_down_cb_handler(call: types.CallbackQuery):
-    pag.press('right')
+@router.callback_query(VoteCallback.filter(F.action == 'right'))
+async def vote_right_cb(call: types.CallbackQuery):
+    await asyncio.to_thread(pag.press, 'right')
+    await call.answer()
 
 
-@dp.callback_query_handler(vote_cb.filter(action='pause'))
-async def vote_down_cb_handler(call: types.CallbackQuery):
-    pag.press('playpause')
+@router.callback_query(VoteCallback.filter(F.action == 'pause'))
+async def vote_pause_cb(call: types.CallbackQuery):
+    await asyncio.to_thread(pag.press, 'playpause')
+    await call.answer("Пауза/Пуск")
 
 
-@dp.callback_query_handler(vote_cb.filter(action='end'))
-async def vote_down_cb_handler(call: types.CallbackQuery):
-    await bot.send_message(identify, "Выберите команду: ")
-    await storage.finish()
-
-
-@dp.errors_handler(exception=MessageNotModified)  # for skipping this exception
-async def message_not_modified_handler(update, error):
-    await storage.finish()
-    return True
-
-
-def register_handler_control(dp: Dispatcher):
-    dp.register_message_handler(cmd_control, commands=['control'])
+@router.callback_query(VoteCallback.filter(F.action == 'end'))
+async def vote_end_cb(call: types.CallbackQuery, state: FSMContext):
+    await call.message.answer("Управление завершено.")
+    # Удаляем сообщение с кнопками, чтобы не спамить
+    await call.message.delete()
+    # Очищаем состояние (аналог storage.finish())
+    await state.clear()
+    await call.answer()

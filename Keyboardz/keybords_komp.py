@@ -1,11 +1,17 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-kb1 = KeyboardButton("Покинуть систему")
-kb2 = KeyboardButton("Перезагрузка")
-kb3 = KeyboardButton("Заблокировать экран")
-kb4 = KeyboardButton("Завершение работы")
-# kb5 = KeyboardButton("")
+# Создаем билдер
+builder = ReplyKeyboardBuilder()
 
-keybord_komp = ReplyKeyboardMarkup(
-    resize_keyboard=True, one_time_keyboard=True)
-keybord_komp.add(kb1, kb2).add(kb3, kb4)  # .add(kb5)
+# Добавляем кнопки
+builder.button(text="Покинуть систему")
+builder.button(text="Перезагрузка")
+builder.button(text="Заблокировать экран")
+builder.button(text="Завершение работы")
+
+# Настраиваем сетку: 2 кнопки в ряд
+# Так как всего кнопок 4, это автоматически создаст 2 ряда по 2 кнопки
+builder.adjust(2)
+
+# Создаем клавиатуру
+keybord_komp = builder.as_markup(resize_keyboard=True, one_time_keyboard=True)

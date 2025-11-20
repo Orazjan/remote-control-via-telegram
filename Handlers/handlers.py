@@ -1,90 +1,46 @@
 import platform
-from aiogram import types, Dispatcher, Bot
-from aiogram.types import ReplyKeyboardRemove
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import Router, types, F
+from aiogram.filters import Command, CommandStart
 from environs import Env
+
+# Импорты функций
 import Funcs.state as st
 import Funcs.funcs as fun
 
 env = Env()
 env.read_env()
+ADMIN_ID = env.int('id')
+COMP_NAME = env.str("kompfirst", "MyPC")  # Добавил дефолтное значение
 
-identify = env.int('id')
-
-bot = Bot(token=env.str('Api_Token'))
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
+router = Router()
 
 
 def get_proc():
-    if (platform.processor() == env.str("kompfirst")):
-        proccessor = "Первый компьютер\n"
-        return proccessor
-    proccessor = f'Другой комп: {platform.processor()}\n'
-    return proccessor
+    proc_name = platform.processor()
+    if proc_name == COMP_NAME:
+        return "Первый компьютер\n"
+    return f'Другой комп: {proc_name}\n'
 
 
-async def on_startup():
-    await setup_bot_commands()
-    st.startTime = st.return_time()
-    await bot.send_message(identify, st.return_message(f"Компьютер \n{get_proc()} \nвключён в "), reply_markup=ReplyKeyboardRemove())
+@router.message(CommandStart(), F.from_user.id == ADMIN_ID)
+async def working(message: types.Message):
+    # start_time переименовали в snake_case
+    info = f"Работает: {get_proc()}\n{st.start_time}"
+    await message.answer(info, reply_markup=types.ReplyKeyboardRemove())
 
 
-async def setup_bot_commands():
-    bot_commands = [
-        types.BotCommand(
-            command="/start", description="Начать/перезапустить"),
-        types.BotCommand(command="/help", description="Что я умею?"),
-        types.BotCommand(command="/rabota",
-                         description="Работа компьютера"),
-        types.BotCommand(command="/status",
-                         description="Состояние компьютера"),
-        types.BotCommand(
-            command="/comands", description="Кнопки для быстрых действий"),
-        types.BotCommand(command="/openweb",
-                         description="Открыть сайт"),
-        types.BotCommand(command="/control",
-                         description="Для управления"),
-        types.BotCommand(
-            command="/kill", description="Отключить программу"),
-        types.BotCommand(command="/cancel",
-                         description="Отмена действия при выключении")
-    ]
-    await bot.set_my_commands(bot_commands)
-
-
-async def working(message: types.message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await bot.send_message(identify, f"Работает: {get_proc()}\n{st.startTime}", reply_markup=ReplyKeyboardRemove())
-
-
+@router.message(Command("cancel"), F.from_user.id == ADMIN_ID)
 async def cancel(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await bot.send_message(identify, st.return_message("Отмена действия "))
-        fun.cancel()
+    await message.answer(st.return_message("Отмена действия "))
+    fun.cancel_shutdown()  # Новое имя функции
 
 
-async def help(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await bot.send_message(identify, fun.help())
-
-
+@router.message(Command("kill"), F.from_user.id == ADMIN_ID)
 async def kill(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await bot.send_message(identify, st.return_message("Программа отключается "))
-        fun.kill_func()
+    await message.answer(st.return_message("Программа отключается "))
+    fun.kill_bot_process()  # Новое имя функции
 
 
-def register_handler_client(dp: Dispatcher):
-    dp.register_message_handler(working, commands=['start'])
-    dp.register_message_handler(cancel, commands=['cancel'])
-    dp.register_message_handler(kill, commands=['kill'])
-    dp.register_message_handler(help, commands=['help'])
+@router.message(Command("help"), F.from_user.id == ADMIN_ID)
+async def help_command(message: types.Message):
+    await message.answer(fun.get_help_text())  # Новое имя функции

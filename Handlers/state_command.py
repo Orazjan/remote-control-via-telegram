@@ -1,89 +1,83 @@
-from aiogram import types, Dispatcher
-from aiogram.dispatcher import FSMContext
-from aiogram.types import ReplyKeyboardRemove
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from Handlers.handlers import bot, dp, identify
+from aiogram import Router, types, F
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import FSInputFile
+from environs import Env
+
 from Keyboardz.keyboards_status import keybord_status
 from Funcs.state import return_message
 from message_processing import status_messages as sc
 from Funcs import status_commands as sac
+import Funcs.funcs as funcs
 
-storage = MemoryStorage()
+env = Env()
+env.read_env()
+ADMIN_ID = env.int('id')
 
-
-class StateComand(StatesGroup):
-    commandforstatus = State()
-    taskname = State()
-
-
-async def menustatus(message: types.Message):
-    if (message.from_id != identify):
-        await bot.send_message(message.from_user.id, "Неправильная команда")
-    else:
-        await StateComand.commandforstatus.set()
-        await bot.send_message(identify, "Работа со статусом компьютера. Выберите действие", reply_markup=keybord_status)
+router = Router()
 
 
-@dp.message_handler(state=StateComand.commandforstatus)
-async def process_command(message: types.Message, state: FSMContext):
+class StatusStates(StatesGroup):
+    waiting_for_command = State()
+    waiting_for_argument = State()
 
-    async with state.proxy() as data:
-        data['commandforstatus'] = message.text
 
-    ReplyKeyboardRemove.remove_keyboard = True
+@router.message(Command("status"), F.from_user.id == ADMIN_ID)
+async def cmd_status_start(message: types.Message, state: FSMContext):
+    await state.set_state(StatusStates.waiting_for_command)
+    await message.answer("Меню статуса:", reply_markup=keybord_status)
 
-    if data['commandforstatus'] == "Закрыть программу":
-        await StateComand.next()
-        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
-        await StateComand.taskname.set()
 
-    elif data['commandforstatus'] == "Яркость":
-        await StateComand.next()
-        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
-        await StateComand.taskname.set()
+@router.message(StatusStates.waiting_for_command, F.from_user.id == ADMIN_ID)
+async def process_command_choice(message: types.Message, state: FSMContext):
+    command_text = message.text
+    await state.update_data(commandforstatus=command_text)
 
-    elif data['commandforstatus'] == "Звук":
-        await StateComand.next()
-        await bot.send_message(identify, sc.status_message.status_komp(data['commandforstatus']))
-        await StateComand.taskname.set()
+    commands_requiring_args = ["Закрыть программу", "Яркость", "Звук"]
 
-    elif data['commandforstatus'] == "Логи":
-        hren = data['commandforstatus']
-        doc = open(f'{funcs.PATH}logfile.log', 'rb')
-        await bot.send_document(identify, doc)
-        await bot.send_message(identify, sc.status_message.status_komp(hren))
-        await state.finish()
+    if command_text in commands_requiring_args:
+        await state.set_state(StatusStates.waiting_for_argument)
+        # ВАЖНО: await
+        response_text = await sc.StatusMessage.status_komp(command_text)
+        await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
+
+    elif command_text == "Логи":
+        log_path = f'{funcs.PATH}logfile.log'
+        try:
+            log_file = FSInputFile(log_path)
+            await message.answer_document(log_file)
+            response_text = await sc.StatusMessage.status_komp(command_text)
+            await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
+        except Exception as e:
+            await message.answer(f"Нет логов или ошибка: {e}")
+        await state.clear()
 
     else:
-        hren = data['commandforstatus']
-        await bot.send_message(identify, sc.status_message.status_komp(hren))
-        await state.finish()
+        # ВАЖНО: await
+        response_text = await sc.StatusMessage.status_komp(command_text)
+        await message.answer(response_text, reply_markup=types.ReplyKeyboardRemove())
+        await state.clear()
 
 
-@dp.message_handler(state=StateComand.taskname)
-async def procces_task(message: types.Message, state: FSMContext):
+@router.message(StatusStates.waiting_for_argument, F.from_user.id == ADMIN_ID)
+async def process_task_argument(message: types.Message, state: FSMContext):
+    task_argument = message.text
+    data = await state.get_data()
+    command_name = data.get('commandforstatus')
 
-    async with state.proxy() as data:
-        data['taskname'] = message.text
+    if command_name == "Закрыть программу":
+        # await + CamelCase
+        await sac.StatusCommands.kill_process(task_argument)
+        await message.answer(return_message(f"Удалено: {task_argument}"))
 
-    if data['commandforstatus'] == "Закрыть программу":
-        sac.status_Commands.kill_process(data['taskname'])
-        await bot.send_message(identify, return_message(f"Удалено {data['taskname']}\n"))
-        await state.finish()
+    elif command_name == "Яркость":
+        # await + CamelCase
+        await sac.StatusCommands.bright_monitor(task_argument)
+        await message.answer(return_message(f"Яркость: {task_argument}%"))
 
-    elif data['commandforstatus'] == "Яркость":
-        sac.status_Commands.bright_monitor(data['taskname'])
-        await bot.send_message(identify, return_message(f"Яркость установлена на {data['taskname']}%\n"))
-        await state.finish()
+    elif command_name == "Звук":
+        await sac.StatusCommands.volume(task_argument)  # await + CamelCase
+        await message.answer(return_message(f"Звук: {task_argument}"))
 
-    elif data['commandforstatus'] == "Звук":
-        sac.status_Commands.volume(data['taskname'])
-        await bot.send_message(identify, return_message(f"Звук установлен на {data['taskname']}%\n"))
-        await state.finish()
-
-    reply_markup = types.ReplyKeyboardRemove()
-
-
-def register_handler_state_command(dp: Dispatcher):
-    dp.register_message_handler(menustatus, commands=['status'])
+    await state.clear()

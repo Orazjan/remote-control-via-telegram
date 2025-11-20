@@ -1,10 +1,17 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-kb1 = KeyboardButton("ALT F4")
-kb2 = KeyboardButton("ALT TAB")
-kb3 = KeyboardButton("F5")
+# Создаем билдер
+builder = ReplyKeyboardBuilder()
 
+# Добавляем кнопки
+builder.button(text="ALT F4")
+builder.button(text="ALT TAB")
+builder.button(text="F5")
 
-keyboard_commands = ReplyKeyboardMarkup(
+# Настраиваем сетку:
+# 3 кнопки в одном ряду
+builder.adjust(3)
+
+# Создаем объект клавиатуры
+keyboard_commands = builder.as_markup(
     resize_keyboard=True, one_time_keyboard=True)
-keyboard_commands.add(kb1, kb2, kb3)

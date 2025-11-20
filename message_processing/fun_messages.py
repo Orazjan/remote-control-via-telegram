@@ -1,24 +1,27 @@
 from Funcs.state import return_message
 
 
-class Funs_messages:
-    def fun_segment(func):
-        if (func == "Напечатать"):
-            func = 'Введите текст на англ\n'
-            return return_message(func)
+class FunMessages:
 
-        elif (func == "Рандом с мышкой"):
-            func = 'Введите количество секунд:\n'
-            return return_message(f"{func}")
+    @staticmethod
+    def fun_segment(action: str):
+        """Возвращает текст ответа в зависимости от выбранного действия"""
 
-        elif (func == "Вывод окна"):
+        if action == "Напечатать":
+            return return_message('Введите текст на англ\n')
+
+        elif action == "Рандом с мышкой":
+            return return_message('Введите количество секунд:\n')
+
+        elif action == "Вывод окна":
             return return_message("Введите текст или выберите из меню:\n")
 
-        elif func == 'Другое':
-            return return_message("На данный момент данная функция не доступна, но мы работает над ней")
+        elif action == 'Другое':
+            return return_message("На данный момент данная функция не доступна, но мы работаем над ней")
 
-        elif func == "Нажать на кнопку":
-            return "Введите кнопку, которую нужно нажать:"
+        elif action == "Нажать на кнопку":
+            # Исправил: добавил return_message для единообразия
+            return return_message("Введите кнопку, которую нужно нажать:")
 
         else:
-            return return_message('Неправильная команда. Попробуйте выбрать другую\n')
+            return return_message(f'{action}: неправильная команда. Попробуйте выбрать другую\n')

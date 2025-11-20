@@ -1,56 +1,107 @@
 import logging
 import os
+import platform
+import asyncio
 import screen_brightness_control as sbc
-from moduleforsound.sound import Sound
-from Funcs import state, task_proc
+
+# Пытаемся импортировать модуль звука.
+# Если его нет или он работает с ошибками, бот не упадет при запуске.
+try:
+    from moduleforsound.sound import Sound
+except ImportError:
+    logging.warning(
+        "Модуль moduleforsound не найден. Управление звуком будет недоступно.")
+    Sound = None
+
+from Funcs import state
 from Funcs import funcs
-from Handlers import handlers
+# Убрали импорт task_proc, если он использовался только для логов (которые мы теперь шлем файлом)
+# from Funcs import task_proc
+
+# Получаем логгер
+logger = logging.getLogger(__name__)
 
 
-class status_Commands:
+class StatusCommands:
 
-    def loggings():
-        log_format = "%(levelname)s %(asctime)s - %(message)s"
-        logging.basicConfig(filename=f"{funcs.PATH}logfile.log",
-                            filemode="w",
-                            format=log_format,
-                            level=logging.ERROR)
+    @staticmethod
+    def setup_logging():
+        """Настраивает запись логов в файл отдельно от консоли"""
+        log_path = f"{funcs.PATH}logfile.log"
 
-        logger = logging.getLogger()
-        logger.error(state.return_message(
-            f"For check \n{handlers.get_proc()}"))
-        logger.info(state.return_message(
-            f"This is log file {handlers.get_proc()}"))
+        # Создаем форматтер и обработчик файла
+        file_formatter = logging.Formatter(
+            "%(levelname)s %(asctime)s - %(message)s")
+        file_handler = logging.FileHandler(
+            log_path, mode="w", encoding='utf-8')
+        file_handler.setFormatter(file_formatter)
+        file_handler.setLevel(logging.INFO)  # или ERROR, как тебе удобнее
 
-    def read_and_send_logs():
+        # Добавляем обработчик к корневому логгеру
+        root_logger = logging.getLogger()
+        root_logger.addHandler(file_handler)
+
+        # Записываем стартовую инфу
+        proc_info = platform.processor()
+        root_logger.info(state.return_message(
+            f"Log file initialized. Processor: {proc_info}"))
+
+    @staticmethod
+    async def kill_process(process_name: str):
+        """Убивает процесс по имени"""
+        # os.system блокирует поток, используем to_thread
+        await asyncio.to_thread(os.system, f"taskkill /f /im {process_name}")
+
+    @staticmethod
+    async def get_brightness():
+        """Получает яркость мониторов"""
         try:
-            logfile = open(f'{funcs.PATH}logfile.log')
-        except FileNotFoundError:
-            return "Ошибка: Файл не найден"
+            # sbc может тупить на некоторых мониторах, оборачиваем
+            monitors = await asyncio.to_thread(sbc.list_monitors)
 
-        array = []
-        for text in logfile:
-            array.append(text+"\n")
+            if not monitors:
+                return "Мониторы не найдены или не поддерживают управление."
 
-        return task_proc.list_to_string(array)
+            result = ""
+            for monitor in monitors:
+                # Получаем яркость
+                # get_brightness возвращает список [50], берем первый элемент
+                b_level = await asyncio.to_thread(sbc.get_brightness, display=monitor)
+                val = b_level[0] if isinstance(b_level, list) else b_level
+                result += f"Монитор: {monitor}\nЯркость: {val}%\n"
+            return result
 
-    def kill_process(text):
-        os.system(f"taskkill /f /im {text}")
+        except Exception as e:
+            logger.error(f"Ошибка получения яркости: {e}")
+            return "Не удалось получить данные о яркости."
 
-    def get_brightness():
-        for monitor in sbc.list_monitors():
-            return f"Название монитора: {monitor}\nУровень яркости: {sbc.get_brightness(display=monitor)}%\n"
+    @staticmethod
+    async def bright_monitor(percent):
+        """Устанавливает яркость"""
+        try:
+            await asyncio.to_thread(sbc.set_brightness, int(percent))
+        except Exception as e:
+            logger.error(f"Ошибка установки яркости: {e}")
 
-    def bright_monitor(procent):
-        sbc.set_brightness(procent)
+    @staticmethod
+    async def get_sound_volume():
+        if Sound:
+            # Если библиотека синхронная, лучше обернуть
+            vol = await asyncio.to_thread(Sound.current_volume)
+            return vol
+        return "Модуль звука отключен"
 
-    def get_sound_volume():
-        return Sound.current_volume()
+    @staticmethod
+    async def volume(level):
+        if not Sound:
+            return
 
-    def volume(level):
-        if level == "Max":
-            Sound.volume_max()
-        elif level == "Mute":
-            Sound.mute()
-        else:
-            Sound.volume_set(int(level))
+        try:
+            if level == "Max":
+                await asyncio.to_thread(Sound.volume_max)
+            elif level == "Mute":
+                await asyncio.to_thread(Sound.mute)
+            else:
+                await asyncio.to_thread(Sound.volume_set, int(level))
+        except Exception as e:
+            logger.error(f"Ошибка звука: {e}")

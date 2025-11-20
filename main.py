@@ -1,26 +1,110 @@
-from aiogram.utils import executor
-import Handlers.handlers as HD
-from aiogram import types
-from Funcs.status_commands import status_Commands
-from Handlers import state_work as SG, state_command as SC, state_open as SO, state_fun as SF, call_back_klawa as CB, state_buttons as SB
+import asyncio
+import logging
 
-#####################################################
-#                                                   #
-#                                                   #
-# №№№№№№№№№№№№№ Не забыть убрать ЛОГ #################
-#                                                   #
-#                                                   #
-#####################################################
+from aiogram import Bot, Dispatcher, types
+from aiogram.fsm.storage.memory import MemoryStorage
+from environs import Env
 
-status_Commands.loggings()
+# Импортируем вспомогательные функции
+import Funcs.state as st
+from Funcs.status_commands import StatusCommands  # Для настройки логгера
+# 1. Импортируем все наши модули с роутерами
+from Handlers import (call_back_klawa, handlers, state_buttons, state_command,
+                      state_fun, state_open, state_work)
 
-HD.register_handler_client(HD.dp)
-SG.register_handler_state_work(HD.dp)
-SB.register_handler_state_button(HD.dp)
-SC.register_handler_state_command(HD.dp)
-SO.register_handler_state_open(HD.dp)
-SF.register_handler_fun_command(HD.dp)
-CB.register_handler_control(HD.dp)
+# 2. Читаем конфиг
+env = Env()
+env.read_env()
 
-executor.start(HD.dp, HD.on_startup())
-executor.start_polling(HD.dp, skip_updates=True)
+# Проверь, чтобы имена переменных в .env совпадали с этими:
+BOT_TOKEN = env.str('Api_Token')
+ADMIN_ID = env.int('id')
+
+
+async def setup_bot_commands(bot: Bot):
+    """Регистрация команд в меню бота"""
+    bot_commands = [
+        types.BotCommand(command="/start", description="Начать/перезапустить"),
+        types.BotCommand(command="/help", description="Что я умею?"),
+        types.BotCommand(command="/rabota", description="Работа компьютера"),
+        types.BotCommand(command="/status",
+                         description="Состояние компьютера"),
+        types.BotCommand(command="/comands", description="Кнопки действий"),
+        types.BotCommand(command="/openweb", description="Открыть сайт"),
+        types.BotCommand(command="/control", description="Управление"),
+        types.BotCommand(command="/kill", description="Отключить программу"),
+        types.BotCommand(command="/cancel", description="Отмена выключения")
+        # /funfun в меню можно не добавлять, если не хочешь, или добавь:
+        # types.BotCommand(command="/funfun", description="Развлечения")
+    ]
+    await bot.set_my_commands(bot_commands)
+
+
+async def on_startup_notify(bot: Bot):
+    """Действия при запуске: ставим время, включаем логи и шлем сообщение админу"""
+    try:
+        # Инициализация записи логов в файл
+        StatusCommands.setup_logging()
+
+        # Обновляем глобальную переменную времени (имя изменено на snake_case)
+        st.start_time = st.get_current_time()
+
+        # Получаем инфу о процессоре
+        proc_info = handlers.get_proc()
+
+        message_text = st.return_message(
+            f"Компьютер \n{proc_info} \nвключён в ")
+
+        # Устанавливаем меню команд
+        await setup_bot_commands(bot)
+
+        # Отправляем сообщение админу
+        await bot.send_message(ADMIN_ID, message_text, reply_markup=types.ReplyKeyboardRemove())
+        logging.info("Уведомление о запуске успешно отправлено.")
+
+    except Exception as e:
+        logging.error(f"Ошибка при отправке уведомления о старте: {e}")
+
+
+async def main():
+    # Базовое логирование в консоль
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s"
+    )
+
+    # Создание объектов
+    bot = Bot(token=BOT_TOKEN)
+    dp = Dispatcher(storage=MemoryStorage())
+
+    # 3. Регистрация роутеров
+    # Порядок важен, но так как у нас везде фильтры по командам, конфликтов не будет
+    dp.include_routers(
+        handlers.router,         # Основные команды (/start, /help)
+        state_work.router,       # /rabota
+        state_buttons.router,    # /comands
+        state_command.router,    # /status
+        state_open.router,       # /openweb
+        state_fun.router,        # /funfun
+        call_back_klawa.router   # /control (инлайн кнопки)
+    )
+
+    # Удаляем вебхуки (аналог skip_updates=True)
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    # Запускаем логику старта (уведомление)
+    await on_startup_notify(bot)
+
+    try:
+        print("Бот запущен! Нажмите Ctrl+C для выхода.")
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
+        print("Сессия бота закрыта.")
+
+if __name__ == "__main__":
+    try:
+        # Запуск асинхронного цикла (кроссплатформенно)
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Бот выключен пользователем")

@@ -1,33 +1,45 @@
-from Funcs import work_command
-from Funcs import funcs
+# Импортируем обновленный класс из Funcs
+from Funcs.work_command import WorkCommands
 from Funcs.state import return_message
 
 
-class work_message:
-    def work_komp(func):
+class WorkMessages:
+
+    @staticmethod
+    async def work_komp(func: str):
+        """
+        Обрабатывает мгновенные действия (блокировка, выход).
+        Для перезагрузки/выключения просто возвращает текст.
+        """
+
         if func == "Покинуть систему":
-            func = "Вы покинете систему через несколько секунд "
-            work_command.work_commands.leave_session()
+            # Выполняем асинхронно
+            await WorkCommands.leave_session()
+            return return_message("Вы покинете систему через несколько секунд ")
 
         elif func == "Заблокировать экран":
-            func = 'Компьютер заблокирован '
-            work_command.work_commands.lock_screen()
-            return_message(func)
+            await WorkCommands.lock_screen()
+            return return_message('Компьютер заблокирован ')
 
         elif func == 'Перезагрузка' or func == 'Завершение работы':
+            # Действие выполнится на следующем шаге (после ввода секунд)
             return return_message('Введите количество секунд: \n')
 
         else:
             return return_message('Неправильная команда. Попробуйте выбрать другую\n')
-        return return_message(func)
 
-    def perezagruzka(text, seconds):
+    @staticmethod
+    async def perezagruzka(text: str, seconds: str):
+        """
+        Выполняет действие (выкл/перезагрузка) с таймером.
+        """
         if text == 'Перезагрузка':
-            work_command.work_commands.reboot(seconds)
+            await WorkCommands.reboot(seconds)
             return return_message(f"Компьютер будет перезагружен через {seconds} секунд\n")
 
         elif text == 'Завершение работы':
-            work_command.work_commands.shutdown(seconds)
+            await WorkCommands.shutdown(seconds)
             return return_message(f"Компьютер будет выключен через {seconds} секунд\n")
+
         else:
             return return_message('Неправильная команда. Попробуйте выбрать другую\n')
