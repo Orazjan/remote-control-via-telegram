@@ -7,10 +7,10 @@ from environs import Env
 
 import Funcs.state as st
 from Funcs.status_commands import StatusCommands
-from Handlers import (call_back_klawa, handlers, state_buttons, state_command,
-                      state_fun, state_open, state_work)
+from Handlers import (call_back_klawa, handlers, sound_handler, state_buttons,
+                      state_command, state_fun, state_open, state_work)
 
-# 2. Читаем конфиг
+# Читаем конфиг
 env = Env()
 env.read_env()
 
@@ -24,6 +24,7 @@ async def setup_bot_commands(bot: Bot):
         types.BotCommand(command="/start", description="Начать/перезапустить"),
         types.BotCommand(command="/help", description="Что я умею?"),
         types.BotCommand(command="/rabota", description="Работа компьютера"),
+        types.BotCommand(command="/zvuk", description="Громкость"),
         types.BotCommand(command="/status",
                          description="Состояние компьютера"),
         types.BotCommand(command="/comands", description="Кнопки действий"),
@@ -40,7 +41,7 @@ async def on_startup_notify(bot: Bot):
     """Действия при запуске: ставим время, включаем логи и шлем сообщение админу"""
     try:
         # Инициализация записи логов в файл
-        # StatusCommands.setup_logging()
+        StatusCommands.setup_logging()
 
         # Обновляем глобальную переменную времени (имя изменено на snake_case)
         st.start_time = st.get_current_time()
@@ -77,6 +78,7 @@ async def main():
     dp.include_routers(
         handlers.router,         # Основные команды (/start, /help)
         state_work.router,       # /rabota
+        sound_handler.router,    # /zvuk
         state_buttons.router,    # /comands
         state_command.router,    # /status
         state_open.router,       # /openweb
