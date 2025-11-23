@@ -40,7 +40,7 @@ async def on_startup_notify(bot: Bot):
     """Действия при запуске: ставим время, включаем логи и шлем сообщение админу"""
     try:
         # Инициализация записи логов в файл
-        StatusCommands.setup_logging()
+        # StatusCommands.setup_logging()
 
         # Обновляем глобальную переменную времени (имя изменено на snake_case)
         st.start_time = st.get_current_time()

@@ -16,11 +16,11 @@ class FunMessages:
         elif action == "Вывод окна":
             return return_message("Введите текст или выберите из меню:\n")
 
-        elif action == 'Другое':
-            return return_message("На данный момент данная функция не доступна, но мы работаем над ней")
+        elif action == "Получить буфер обмена":
+            return return_message("Текст из буфера обмена:\n")
 
-        elif action == "Нажать на кнопку":
-            return return_message("Введите кнопку, которую нужно нажать:")
+        elif action == "Записать в буфер обмена":
+            return return_message("Напишите текст, который нужно записать в буфер обмена:")
 
         else:
             return return_message(f'{action}: неправильная команда. Попробуйте выбрать другую\n')

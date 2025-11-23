@@ -3,6 +3,8 @@ import os
 import random as rd
 import threading
 import time
+import asyncio
+import pyperclip
 
 import cv2
 import pyautogui as pag
@@ -64,7 +66,7 @@ class FunFuncs:
         """Включает или выключает удержание мыши в центре"""
         if enable:
             if FunFuncs._blocking_active:
-                return  # Уже работает
+                return
 
             FunFuncs._blocking_active = True
             t = threading.Thread(
@@ -115,3 +117,12 @@ class FunFuncs:
             # Обязательно освобождаем ресурсы, даже если была ошибка
             if cap:
                 cap.release()
+
+    # Асинхронные методы для работы с буфером обмена
+    @staticmethod
+    async def get_clipboard():
+        return await asyncio.to_thread(pyperclip.paste)
+
+    @staticmethod
+    async def set_clipboard(text: str):
+        await asyncio.to_thread(pyperclip.copy, text)

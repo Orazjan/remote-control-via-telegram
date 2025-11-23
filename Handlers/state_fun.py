@@ -104,6 +104,54 @@ async def process_fun_action(message: types.Message, state: FSMContext):
             reply_markup=types.ReplyKeyboardRemove()
         )
 
+    elif chosen_action == "Получить буфер обмена":
+        text = await fun_commands.FunFuncs.get_clipboard()
+
+        if not text:
+            await message.answer("Буфер обмена пуст.")
+            await state.clear()
+            return
+
+        # Лимит Телеграм ~4096 символов
+        if len(text) > 4000:
+            # ОТПРАВКА ФАЙЛОМ ---
+            await message.answer("Текст слишком длинный, формирую файл...")
+
+            # Используем путь из твоего конфига
+            file_path = f"{funcs.PATH}clipboard.txt"
+
+            try:
+                # Записываем текст в файл
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(text)
+
+                # Отправляем файл
+                file_to_send = FSInputFile(file_path)
+                await message.answer_document(
+                    file_to_send,
+                    caption="📋 <b>Буфер обмена (файл)</b>",
+                    parse_mode="HTML"
+                )
+            except Exception as e:
+                await message.answer(f"Ошибка при создании файла: {e}")
+            finally:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+        else:
+            try:
+                await message.answer(f"📋 <b>Буфер обмена:</b>\n<code>{text}</code>", parse_mode="HTML")
+            except Exception:
+                await message.answer(f"📋 Буфер обмена:\n{text}")
+
+        await state.clear()
+
+    elif chosen_action in ["Записать в буфер обмена"]:
+        await state.set_state(FunStates.waiting_for_input)
+        await message.answer(
+            fs.FunMessages.fun_segment(chosen_action),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
     else:
         await state.set_state(FunStates.waiting_for_input)
         await message.answer(
@@ -130,5 +178,12 @@ async def process_fun_input(message: types.Message, state: FSMContext):
         fun_commands.FunFuncs.window_warning(input_value)
         await message.answer(return_message("Окно выведено.\n"))
 
-    await message.answer("Готово", reply_markup=types.ReplyKeyboardRemove())
+    elif action == "Записать в буфер обмена":
+        try:
+            await fun_commands.FunFuncs.set_clipboard(input_value)
+            await message.answer(return_message("Текст записан в буфер обмена.\n"))
+        except Exception as e:
+            await message.answer(f"Ошибка записи в буфер обмена: {e}")
+
+    # await message.answer("Готово", reply_markup=types.ReplyKeyboardRemove())
     await state.clear()
