@@ -10,11 +10,13 @@ builder_funs.button(text="Скриншот экрана")
 builder_funs.button(text="Фото с камеры")
 builder_funs.button(text="Блок мышки и клавы")
 builder_funs.button(text="Анблок мышки и клавы")
+builder_funs.button(text="Записать звук")
 builder_funs.button(text="Получить буфер обмена")
 builder_funs.button(text="Записать в буфер обмена")
 
+
 # Настраиваем сетку
-builder_funs.adjust(2, 2, 2, 3)
+builder_funs.adjust(3, 3, 2, 2)
 
 keyBoard_funs = builder_funs.as_markup(
     resize_keyboard=True, one_time_keyboard=True)

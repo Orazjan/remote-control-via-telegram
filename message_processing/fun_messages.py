@@ -22,5 +22,8 @@ class FunMessages:
         elif action == "Записать в буфер обмена":
             return return_message("Напишите текст, который нужно записать в буфер обмена:")
 
+        elif action == "Записать звук":
+            return return_message("Введите длительность записи в секундах:\n")
+
         else:
             return return_message(f'{action}: неправильная команда. Попробуйте выбрать другую\n')

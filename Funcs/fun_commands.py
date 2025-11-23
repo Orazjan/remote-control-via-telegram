@@ -1,13 +1,15 @@
+import asyncio
 import logging
 import os
 import random as rd
 import threading
 import time
-import asyncio
-import pyperclip
 
 import cv2
 import pyautogui as pag
+import pyperclip
+import sounddevice as sd
+from scipy.io.wavfile import write
 
 # Импортируем путьы из funcs
 from Funcs import funcs
@@ -126,3 +128,31 @@ class FunFuncs:
     @staticmethod
     async def set_clipboard(text: str):
         await asyncio.to_thread(pyperclip.copy, text)
+
+    @staticmethod
+    async def record_audio(duration: int):
+        """
+        Записывает звук с микрофона по умолчанию.
+        duration: длительность в секундах.
+        Возвращает путь к записанному файлу.
+        """
+        # Путь сохранения
+        filename = f"{funcs.PATH}record.wav"
+
+        def _record_sync():
+            # Частота дискретизации (44100 - стандартное качество)
+            fs = 44100
+
+            # Запускаем запись. sd.rec не блокирует код, он пишет в буфер
+            # channels=2 (стерео), если микрофон один - запишет моно в оба канала
+            recording = sd.rec(int(duration * fs), samplerate=fs, channels=2)
+
+            # Ждем окончания записи
+            sd.wait()
+
+            # Сохраняем массив numpy в wav файл
+            write(filename, fs, recording)
+            return filename
+
+        # Запускаем в отдельном потоке, чтобы бот не завис во время записи
+        return await asyncio.to_thread(_record_sync)

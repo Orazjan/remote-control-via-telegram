@@ -7,6 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile
 from environs import Env
 
+# Импорты логики
 from Funcs import fun_commands, funcs
 from Funcs.state import return_message
 from Keyboardz.keyboard_fun import keyBoard_funs, keyboard_wybor
@@ -91,7 +92,6 @@ async def process_fun_action(message: types.Message, state: FSMContext):
 
     elif chosen_action == "Вывод окна":
         await state.set_state(FunStates.waiting_for_input)
-
         await message.answer(
             fs.FunMessages.fun_segment(chosen_action),
             reply_markup=keyboard_wybor
@@ -117,15 +117,11 @@ async def process_fun_action(message: types.Message, state: FSMContext):
             # ОТПРАВКА ФАЙЛОМ ---
             await message.answer("Текст слишком длинный, формирую файл...")
 
-            # Используем путь из твоего конфига
             file_path = f"{funcs.PATH}clipboard.txt"
-
             try:
-                # Записываем текст в файл
                 with open(file_path, "w", encoding="utf-8") as f:
                     f.write(text)
 
-                # Отправляем файл
                 file_to_send = FSInputFile(file_path)
                 await message.answer_document(
                     file_to_send,
@@ -145,14 +141,24 @@ async def process_fun_action(message: types.Message, state: FSMContext):
 
         await state.clear()
 
-    elif chosen_action in ["Записать в буфер обмена"]:
+    elif chosen_action == "Записать в буфер обмена":
         await state.set_state(FunStates.waiting_for_input)
         await message.answer(
             fs.FunMessages.fun_segment(chosen_action),
             reply_markup=types.ReplyKeyboardRemove()
         )
 
+    # --- ОБРАБОТКА НАЖАТИЯ КНОПКИ ЗАПИСИ ЗВУКА ---
+    elif chosen_action == "Записать звук":
+        await state.set_state(FunStates.waiting_for_input)
+        # Бот спросит: "Укажите длительность записи в секундах (макс 60):"
+        await message.answer(
+            fs.FunMessages.fun_segment(chosen_action),
+            reply_markup=types.ReplyKeyboardRemove()
+        )
+
     else:
+        # Для неизвестных или "Другое"
         await state.set_state(FunStates.waiting_for_input)
         await message.answer(
             fs.FunMessages.fun_segment(chosen_action),
@@ -163,7 +169,6 @@ async def process_fun_action(message: types.Message, state: FSMContext):
 @router.message(FunStates.waiting_for_input, F.from_user.id == ADMIN_ID)
 async def process_fun_input(message: types.Message, state: FSMContext):
     input_value = message.text
-
     data = await state.get_data()
     action = data.get('choosen')
 
@@ -185,5 +190,35 @@ async def process_fun_input(message: types.Message, state: FSMContext):
         except Exception as e:
             await message.answer(f"Ошибка записи в буфер обмена: {e}")
 
-    # await message.answer("Готово", reply_markup=types.ReplyKeyboardRemove())
+    # --- ОБРАБОТКА ВВОДА ДЛИТЕЛЬНОСТИ ---
+    elif action == "Записать звук":
+        try:
+            # Проверяем, что ввели число
+            duration = int(input_value)
+            if duration > 60:
+                await message.answer("Максимум 60 секунд. Попробуйте еще раз.")
+                # Не сбрасываем состояние, ждем ввода снова
+                return
+
+            status_msg = await message.answer(f"🎤 Записываю {duration} сек...")
+
+            # Вызываем функцию из fun_commands.FunFuncs (она там должна быть добавлена)
+            file_path = await fun_commands.FunFuncs.record_audio(duration)
+
+            voice_file = FSInputFile(file_path)
+            await message.answer_voice(voice_file, caption=f"Запись: {duration} сек")
+
+            await status_msg.delete()
+
+            # Удаляем файл
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+        except ValueError:
+            await message.answer("Введите число (секунды).")
+            return  # Ждем повторного ввода
+        except Exception as e:
+            await message.answer(f"Ошибка записи: {e}")
+
+    await message.answer("Готово", reply_markup=types.ReplyKeyboardRemove())
     await state.clear()
