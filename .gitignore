@@ -1,0 +1,11 @@
+_pycache_
+*_pycache_
+_init_.py
+*.pyc
+*_init_.py
+.log
+*.log
+/_pycache_
+/_init_.py
+/screens
+/.vscode
