@@ -9,3 +9,5 @@ _init_.py
 /_init_.py
 /screens
 /.vscode
+screens/
+/screens/*
