@@ -22,7 +22,7 @@ Input Control: Block mouse/keyboard, virtual keyboard inputs.
 
 Clone the repository:
 
-git clone [https://github.com/yourusername/remote-control-via-telegram.git](https://github.com/yourusername/remote-control-via-telegram.git)
+git clone [https://github.com/Orazjan/remote-control-via-telegram.git](https://github.com/Orazjan/remote-control-via-telegram.git)
 cd remote-control-via-telegram
 
 
@@ -130,7 +130,7 @@ The bot features a hidden command /funfun that is not listed in the main Telegra
 
 Скачайте проект:
 
-git clone [https://github.com/yourusername/remote-control-via-telegram.git](https://github.com/yourusername/remote-control-via-telegram.git)
+git clone [https://github.com/Orazjan/remote-control-via-telegram.git](https://github.com/Orazjan/remote-control-via-telegram.git)
 cd remote-control-via-telegram
 
 
