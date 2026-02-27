@@ -4,7 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile
 from environs import Env
-
+from pycaw.pycaw import AudioUtilities, ISimpleAudioVolume
+from aiogram.filters.callback_data import CallbackData
 import Funcs.funcs as funcs
 from Funcs import status_commands as sac
 from Funcs.state import return_message
@@ -16,6 +17,11 @@ env.read_env()
 ADMIN_ID = env.int('id')
 
 router = Router()
+
+
+class AudioCallback(CallbackData, prefix="Звук"):
+    action: str
+    name: str
 
 
 class StatusStates(StatesGroup):

@@ -22,6 +22,10 @@ class WorkMessages:
         elif func == 'Перезагрузка' or func == 'Завершение работы':
             return return_message('Введите количество секунд: \n')
 
+        elif func == 'Отмена выключения':
+            await WorkCommands.cancel_shutdown()
+            return return_message('Вы отменили выключение компьютера')
+
         else:
             return return_message('Неправильная команда. Попробуйте выбрать другую\n')
 

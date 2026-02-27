@@ -81,7 +81,6 @@ class FunFuncs:
     def screenshot():
         """Делает скриншот и сохраняет по пути из funcs.PATH"""
         try:
-            # Убедимся, что папка существует
             save_path = f'{funcs.PATH}ss.png'
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
@@ -94,14 +93,13 @@ class FunFuncs:
         """Делает фото с веб-камеры"""
         cap = None
         try:
-            # 0 - индекс камеры по умолчанию
             cap = cv2.VideoCapture(0)
 
             if not cap.isOpened():
                 logger.warning("Не удалось открыть камеру")
                 return
 
-            # Прогрев камеры (баланс белого, экспозиция)
+            # Прогрев камеры
             for _ in range(10):
                 cap.read()
 

@@ -43,3 +43,8 @@ class WorkCommands:
         """Блокировка экрана (Win + L)"""
         cmd = "rundll32.exe user32.dll,LockWorkStation"
         await asyncio.to_thread(os.system, cmd)
+
+    @staticmethod
+    async def cancel_shutdown():
+        """Отмена запланированного выключения"""
+        os.system("shutdown -a")

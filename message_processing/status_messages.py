@@ -54,8 +54,7 @@ class StatusMessage:
             return return_message(f"{brightness_info}\nУкажите новый уровень яркости (0-100):\n")
 
         elif func == 'Звук':
-            volume_level = await StatusCommands.get_sound_volume()
-            return f"Уровень звука: {volume_level}\nВведите уровень звука, который нужно установить (или Max/Mute):"
+            return return_message("Открываю панель управления звуком...\n")
 
         else:
             return return_message('Неправильная команда. Попробуйте выбрать другую\n')

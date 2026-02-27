@@ -30,9 +30,7 @@ async def setup_bot_commands(bot: Bot):
         types.BotCommand(command="/comands", description="Кнопки действий"),
         types.BotCommand(command="/openweb", description="Открыть сайт"),
         types.BotCommand(command="/control", description="Управление"),
-        types.BotCommand(command="/kill", description="Отключить программу"),
-        types.BotCommand(command="/cancel", description="Отмена выключения")
-
+        types.BotCommand(command="/kill", description="Отключить программу")
     ]
     await bot.set_my_commands(bot_commands)
 
@@ -40,22 +38,17 @@ async def setup_bot_commands(bot: Bot):
 async def on_startup_notify(bot: Bot):
     """Действия при запуске: ставим время, включаем логи и шлем сообщение админу"""
     try:
-        # Инициализация записи логов в файл
         StatusCommands.setup_logging()
 
-        # Обновляем глобальную переменную времени (имя изменено на snake_case)
         st.start_time = st.get_current_time()
 
-        # Получаем инфу о процессоре
         proc_info = handlers.get_proc()
 
         message_text = st.return_message(
             f"Компьютер \n{proc_info} \nвключён в ")
 
-        # Устанавливаем меню команд
         await setup_bot_commands(bot)
 
-        # Отправляем сообщение админу
         await bot.send_message(ADMIN_ID, message_text, reply_markup=types.ReplyKeyboardRemove())
         logging.info("Уведомление о запуске успешно отправлено.")
 

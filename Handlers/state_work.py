@@ -30,7 +30,8 @@ async def process_work_action(message: types.Message, state: FSMContext):
     action_name = message.text
     await state.update_data(command_name=action_name)
 
-    instant_actions = ['Покинуть систему', 'Заблокировать экран']
+    instant_actions = ['Покинуть систему',
+                       'Заблокировать экран', 'Отмена выключения']
 
     if action_name in instant_actions:
         response_text = await ps.WorkMessages.work_komp(action_name)
